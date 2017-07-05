@@ -1,0 +1,1 @@
+java -jar -Dserver.port=12345 webtelnet-0.1.0.jar
