@@ -39,15 +39,18 @@ public class TelnetServiceImpl implements TelnetService {
         TelnetResponse response = new TelnetResponse();
         response.setUserId(userId);
 
-        TelnetExecutor executor = TelnetExecutorFactory.getInstance().createTelnetExecutor(sessionId, userId, command.getIpaddr(), command.getPort());
+        Device device = deviceService.findById(command.getDeviceId());
 
-        if(!executor.connect()){
+        TelnetExecutor executor = TelnetExecutorFactory.getInstance().createTelnetExecutor(sessionId, userId, device);
+        executor.setDeviceService(deviceService);
+
+        String ret = "";
+        if (!executor.connect()) {
             TelnetWebSocketHandlerDecoratorFactory.getInstance().closeSession(sessionId);
-        }else {
-            deviceService.updateStatus(command.getDeviceId(), (short) Device.Status.CONNECTED.ordinal());
+        } else {
+            ret = executor.readResponse();
         }
 
-        String ret = executor.readResponse();
         response.setContent(ret);
 
         return response;
@@ -62,8 +65,6 @@ public class TelnetServiceImpl implements TelnetService {
         response.setUserId(userId);
 
         TelnetExecutorFactory.getInstance().releaseTelnetExecutor(sessionId);
-
-        deviceService.updateStatus(command.getDeviceId(), (short) Device.Status.DISCONNECTED.ordinal());
 
         return response;
     }
@@ -83,7 +84,7 @@ public class TelnetServiceImpl implements TelnetService {
         return response;
     }
 
-    @Scheduled(fixedDelay=1500)
+    @Scheduled(fixedDelay = 1500)
     public void sendTradeNotifications() {
 
         Map<String, Object> map = new HashMap<>();

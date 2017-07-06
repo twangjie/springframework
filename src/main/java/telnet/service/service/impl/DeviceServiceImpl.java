@@ -23,6 +23,11 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
+    public Device findById(Long id) {
+        return deviceRepository.findOne(id);
+    }
+
+    @Override
     public List<Device> getDevice(String ip, String port) {
         return deviceRepository.findByIpAndPort(ip, port);
     }
@@ -50,7 +55,7 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     public Long updateStatus(Long id, Short status) {
         Device device = deviceRepository.findOne(id);
-        if(device != null) {
+        if (device != null) {
             device.setStatus(status);
             deviceRepository.save(device);
         }

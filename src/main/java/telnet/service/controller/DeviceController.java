@@ -8,6 +8,7 @@ import telnet.service.service.DeviceService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.websocket.server.PathParam;
 import java.util.Arrays;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class DeviceController {
     }
 
     @RequestMapping(path="/device", method = RequestMethod.DELETE)
-    public void delete(HttpServletRequest request, HttpServletResponse response,@RequestParam(name="id") Long id) {
+    public void delete(HttpServletRequest request, HttpServletResponse response, @RequestParam(name="id") Long id) {
         deviceService.deleteById(id);
     }
 
@@ -46,8 +47,13 @@ public class DeviceController {
         return deviceService.getDevices();
     }
 
+    @RequestMapping(path="/device/{id}", method = RequestMethod.GET)
+    public Device findById(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") Long id) {
+        return deviceService.findById(id);
+    }
+
     @RequestMapping(path = "find", method = RequestMethod.POST)
-    public List<Device> findByIpAndPort(HttpServletRequest request, HttpServletResponse response,@RequestBody Device device) {
+    public List<Device> findByIpAndPort(HttpServletRequest request, HttpServletResponse response, @RequestBody Device device) {
 
         if (device == null || device.getIp() == null || device.getIp().isEmpty()) {
             return deviceService.getDevices();

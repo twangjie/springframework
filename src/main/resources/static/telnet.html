@@ -3,7 +3,9 @@
 <head>
     <title>Web Telnet</title>
     <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/main.css" rel="stylesheet">
+    <!--<link href="/main.css" rel="stylesheet">-->
+    <link href="css/device_table.css" rel="stylesheet" type="text/css"/>
+
     <script src="/webjars/jquery/jquery.min.js"></script>
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
@@ -12,9 +14,9 @@
 <body>
 <script type="text/javascript">
 
-    $(window).ready(function() {
+    $(window).ready(function () {
 
-         $.telnetConnect();
+        $.telnetConnect();
     });
 
 </script>
@@ -23,33 +25,56 @@
     Javascript and reload this page!</h2></noscript>
 <div id="main-content" class="container">
     <div class="row">
-        <div class="col-md-6">
-            <form class="form-inline">
-                <div class="form-group">
-                    <label for="connect" id="lblConnect">Telnet</label>
-                    <br />
-                    <input type="text" id="ip" class="form-control" value="127.0.0.1">
-                    <input type="text" id="port" class="form-control" value="23">
+        <!--<div class="col-md-6">-->
+        <!--<form class="form-inline">-->
+        <!--<div class="form-group">-->
+        <!--<label for="connect" id="lblConnect">Telnet</label>-->
+        <!--<br />-->
+        <!--<input type="text" id="ip" class="form-control" value="127.0.0.1">-->
+        <!--<input type="text" id="port" class="form-control" value="23">-->
 
-                    <button id="connect" class="btn btn-default" type="submit">Connect</button>
-                    <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect
-                    </button>
-                </div>
-            </form>
-        </div>
+        <!--<button id="connect" class="btn btn-default" type="submit">Connect</button>-->
+        <!--<button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect-->
+        <!--</button>-->
+        <!--</div>-->
+        <!--</form>-->
+        <!--</div>-->
+        <table id="deviceInfo" class="sample">
+            <tbody>
+            <tr>
+                <td>名称</td>
+                <td><label id="lblName"/></td>
+                <td>归属组</td>
+                <td><label id="lblAddress"/></td>
+            </tr>
+            <tr>
+                <td>IP地址</td>
+                <td><label id="lblIP"/></td>
+                <td>端口</td>
+                <td><label id="lblPort"/></td>
+            </tr>
+            <tr>
+                <td>备注</td>
+                <td><label id="lblInfo"/></td>
+                <td>连接状态</td>
+                <td><label id="lblStatus"/></td>
+            </tr>
+            </tbody>
+        </table>
     </div>
     <div class="col-md-6">
         <form class="form-inline">
             <div class="form-group">
-                <label for="name">Command:</label>
+                <label for="name">命令</label>
                 <input type="text" id="name" class="form-control" placeholder="...">
             </div>
-            <button id="send" class="btn btn-default" type="submit">Send</button>
+            <button id="send" class="btn btn-default" type="submit">发送</button>
         </form>
     </div>
     <div class="row">
         <div class="col-md-12">
-            <div id="greetings" style="width:850px; height: 600px;border: 1px #ccc solid; overflow-y: scroll;float: left;"></div>
+            <div id="greetings"
+                 style="width:850px; height: 600px;border: 1px #ccc solid; overflow-y: scroll;float: left;"></div>
         </div>
     </div>
     </form>

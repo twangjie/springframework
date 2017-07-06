@@ -3,12 +3,14 @@ package telnet.service;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.WebSocketHandlerDecorator;
 import org.springframework.web.socket.handler.WebSocketHandlerDecoratorFactory;
 import telnet.service.executor.TelnetExecutorFactory;
+import telnet.service.service.DeviceService;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,11 +25,12 @@ public class TelnetWebSocketHandlerDecoratorFactory implements WebSocketHandlerD
     private static TelnetWebSocketHandlerDecoratorFactory instance = new TelnetWebSocketHandlerDecoratorFactory();
     private ConcurrentHashMap<String, WebSocketSession> webSocketSessionConcurrentHashMap = new ConcurrentHashMap<>();
 
+
     public static TelnetWebSocketHandlerDecoratorFactory getInstance() {
         return instance;
     }
 
-    protected  TelnetWebSocketHandlerDecoratorFactory() {
+    protected TelnetWebSocketHandlerDecoratorFactory() {
 
     }
 

@@ -1,21 +1,21 @@
 var stompClient = null;
 var useId = null;
 var deviceId = 0;
+var deviceJSONObj = null;
+var retry = 3;
 
 function setConnected(connected) {
-    $("#connect").prop("disabled", connected);
-    $("#disconnect").prop("disabled", !connected);
-
-    $("#ip").prop("disabled", !connected);
-    $("#ip").prop("disabled", connected);
-
-    $("#port").prop("disabled", !connected);
-    $("#port").prop("disabled", connected);
 
     if (connected) {
+        $("#lblStatus").text("已连接");
         $("#conversation").show();
     }
     else {
+        if (retry <= 0)
+            $("#lblStatus").text("连接失败");
+        else
+            $("#lblStatus").text("未连接");
+
         $("#conversation").hide();
     }
     $("#greetings").html("");
@@ -36,8 +36,12 @@ function connect() {
     var stompFailureCallback = function (error) {
         disconnect();
         console.log('STOMP: ' + error);
-        setTimeout(connect, 3000);
-        console.log('STOMP: Reconecting in 3 seconds');
+        if(retry > 0) {
+            setTimeout(connect, 3000);
+            console.log('STOMP: Reconecting in 3 seconds');
+        }
+
+        retry--;
     };
 
     var stompSuccessCallback = function () {
@@ -117,6 +121,20 @@ function htmlDecode(value){
     return $('<div/>').html(value).text();
 }
 
+function findDeviceByid(id) {
+    var respText = $.ajax({
+        url: "/api/device/" + id,
+        async: false,
+        type:'GET',
+        cache:false,
+        contentType: "application/json; charset=utf-8",
+        dataType:'text',
+        data: null
+    }).responseText;
+
+    return JSON.parse(respText);
+}
+
 $(function () {
     $("form").on('submit', function (e) {
         e.preventDefault();
@@ -135,16 +153,22 @@ $(function () {
         console.log(window.location.href);
 
         deviceId = $.getUrlParam('devid');
-        var name = $.getUrlParam('name');
-        var host = $.getUrlParam('host');
-        var port = $.getUrlParam('port');
 
-        $("#lblConnect").text("Telnet " + name);
+        deviceJSONObj = findDeviceByid(deviceId);
+
+        var name = deviceJSONObj.name;
+        var address = deviceJSONObj.address;
+        var host = deviceJSONObj.ip;
+        var port = deviceJSONObj.port;
+        var info = deviceJSONObj.info;
+
+        $("#lblName").text(name);
+        $("#lblAddress").text(address);
+        $("#lblIP").text(host);
+        $("#lblPort").text(port);
+        $("#lblInfo").text(info);
 
         if (host != null && port != null) {
-            $("#ip").val(host);
-            $("#port").val(port);
-
             connect();
         }
     }

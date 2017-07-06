@@ -6,6 +6,11 @@ var jsonObj = { device: [
     { id:'3', ip: "192.168.35.5", port: "23"}
 ]};
 
+function refresh_list() {
+    refresh();
+    setTimeout(refresh_list, 10000);
+}
+
 $(window).ready(function() {
 
     var path = window.location.pathname;
@@ -13,7 +18,7 @@ $(window).ready(function() {
         flag = true;
     }
 
-    refresh();
+    refresh_list();
 });
 
 function getDevices() {
@@ -43,7 +48,7 @@ function addDevice() {
         return false;
     }
 
-    var newDevice = '{"ip": "'+ip+'", "port":"'+port+'", "name":"'+name+'", "address":"'+address+'", "info":"'+info+'"}';
+    var newDevice = '{"ip": "'+ip+'", "port":"'+port+'", "name":"'+name+'", "address":"'+address+'", "info":"'+info+'", "status":2}';
 
     var respText = $.ajax({
         url: "/api/device",

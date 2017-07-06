@@ -9,6 +9,8 @@ import java.util.List;
  */
 public interface DeviceService {
 
+    Device findById(Long id);
+
     List<Device> getDevice(String ip, String port);
 
     List<Device> getDevices();

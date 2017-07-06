@@ -6,6 +6,8 @@ import java.io.PrintStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.net.telnet.TelnetClient;
+import telnet.service.domain.Device;
+import telnet.service.service.DeviceService;
 
 /**
  * Created by 王杰 on 2017/7/4.
@@ -15,12 +17,14 @@ public class TelnetExecutor {
     private static final Log logger = LogFactory.getLog(TelnetExecutor.class);
 
     private String userId;
-    private String ip;
-    private int port;
+    private Device device;
     private TelnetClient telnet = new TelnetClient();
     private InputStream in;
     private PrintStream out;
 
+    private DeviceService deviceService;
+
+    private boolean connected = false;
 
     public String getUserId() {
         return userId;
@@ -30,31 +34,33 @@ public class TelnetExecutor {
         this.userId = userId;
     }
 
-    public String getIp() {
-        return ip;
+    public Device getDevice() {
+        return device;
     }
 
-    public void setIp(String ip) {
-        this.ip = ip;
+    public void setDevice(Device device) {
+        this.device = device;
     }
 
-    public int getPort() {
-        return port;
-    }
 
-    public void setPort(int port) {
-        this.port = port;
+    public void setDeviceService(DeviceService deviceService) {
+        this.deviceService = deviceService;
     }
 
     public boolean connect() {
         try {
-            telnet.connect(ip, port);
+            telnet.connect(device.getIp(), Integer.parseInt(device.getPort()));
             in = telnet.getInputStream();
             out = new PrintStream(telnet.getOutputStream());
+
+            deviceService.updateStatus(device.getId(), Device.CONNECTED);
+            connected = true;
 
         }catch (Exception ex) {
             ex.printStackTrace();
             logger.error(ex.getMessage(), ex);
+
+            deviceService.updateStatus(device.getId(), Device.UNKNOWN);
 
             return false;
         }
@@ -69,6 +75,11 @@ public class TelnetExecutor {
      * @return
      */
     public String readResponse() {
+
+        if(in == null) {
+            return "";
+        }
+
         String response = "";
         StringBuilder sb = new StringBuilder();
 
@@ -138,9 +149,14 @@ public class TelnetExecutor {
     public void disconnect() {
         try {
             telnet.disconnect();
+            if(connected) {
+                deviceService.updateStatus(device.getId(), Device.DISCONNECTED);
+            }else{
+                deviceService.updateStatus(device.getId(), Device.UNKNOWN);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 }

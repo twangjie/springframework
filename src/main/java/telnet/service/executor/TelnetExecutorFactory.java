@@ -2,6 +2,10 @@ package telnet.service.executor;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import telnet.service.domain.Device;
+import telnet.service.service.DeviceService;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -14,7 +18,6 @@ public class TelnetExecutorFactory {
 
     private static TelnetExecutorFactory instance = new TelnetExecutorFactory();
 
-
     private ConcurrentHashMap<String, TelnetExecutor> telnetExecutorConcurrentHashMap = new ConcurrentHashMap();
 
     public static TelnetExecutorFactory getInstance() {
@@ -25,14 +28,13 @@ public class TelnetExecutorFactory {
 
     }
 
-    public TelnetExecutor createTelnetExecutor(String sessionId, String userId, String ip, int port) {
+    public TelnetExecutor createTelnetExecutor(String sessionId, String userId, Device device) {
 
         TelnetExecutor executor = null;
         if (!telnetExecutorConcurrentHashMap.containsKey(sessionId)) {
             executor = new TelnetExecutor();
             executor.setUserId(userId);
-            executor.setIp(ip);
-            executor.setPort(port);
+            executor.setDevice(device);
 
             telnetExecutorConcurrentHashMap.put(sessionId, executor);
 

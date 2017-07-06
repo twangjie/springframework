@@ -10,12 +10,10 @@ import java.io.Serializable;
 @Table(name = "moxa")
 public class Device implements Serializable {
 
-    public  enum Status {
-        ZERO,
-        CONNECTED,
-        DISCONNECTED,
-        UNKNOWN
-    }
+    // 状态 1-连接 2-断开 3-未知,
+    public static final short CONNECTED = 1;
+    public static final short DISCONNECTED = 2;
+    public static final short UNKNOWN = 3;
 
     private static final long serialVersionUID = 1L;
 
@@ -39,7 +37,7 @@ public class Device implements Serializable {
     private String info;
 
     @Column
-    private Short status = 3;
+    private Short status = DISCONNECTED;
 
     public Device() {
 
