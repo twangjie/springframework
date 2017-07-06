@@ -30,15 +30,20 @@ function getDevices() {
 }
 
 function addDevice() {
+
     var ip = $('#ip').val();
     var port = $('#port').val();
+    var name = $('#name').val();
+    var address = $('#address').val();
+    var info = $('#info').val();
+
     var flag = checkDeviceExist(ip, port);
     if(flag == false) {
         alert("添加失败! ip: "+ ip +  ", port: "+ port + " 已经存在!");
         return false;
     }
 
-    var newDevice = '{"ip": "'+ip+'", "port":'+port+'}';
+    var newDevice = '{"ip": "'+ip+'", "port":"'+port+'", "name":"'+name+'", "address":"'+address+'", "info":"'+info+'"}';
 
     var respText = $.ajax({
         url: "/api/device",
@@ -68,6 +73,18 @@ function deleteDevice(obj) {
     refresh();
 }
 
+function getStatsDesc(status) {
+    switch(status) {
+        case 1:
+            return "连接";
+            break;
+        case 2:
+            return "空闲";
+            break;
+    }
+    return "未知";
+}
+
 function refresh() {
     getDevices();
 
@@ -77,10 +94,14 @@ function refresh() {
         var device = devices[i];
 
         var idTd = "<td>" + device.id + "</td>";
+        var nameTd = "<td>" + device.name + "</td>";
+        var addrTd = "<td>" + device.address + "</td>"
         var ipTd = "<td>" + device.ip + "</td>";
         var portTd = "<td>" + device.port + "</td>"
+        var infoTd = "<td>" + device.info + "</td>"
+        var statusTd = "<td>" + getStatsDesc(device.status) + "</td>"
 
-        var action = "<td><a href='#' onclick='telnet(\""+device.ip+"\","+device.port+")'</a>Telnet</td>"
+        var action = "<td><a href='#' onclick='telnet("+device.id+",\""+device.name+"\",\""+device.ip+"\","+device.port+")'</a>Telnet</td>"
         if (flag == true) {
             action = "<td><a href='#' onclick='deleteDevice(this)' id='";
             action += device.id + "'" + "</a>Delete</td>"
@@ -88,8 +109,12 @@ function refresh() {
 
         var trStr = "<tr name='device'>";
         trStr += idTd;
+        trStr += nameTd;
+        trStr += addrTd;
         trStr += ipTd;
         trStr += portTd;
+        trStr += infoTd;
+        trStr += statusTd;
         trStr += action;
         trStr += "</tr>";
 

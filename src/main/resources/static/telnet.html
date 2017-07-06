@@ -13,6 +13,7 @@
 <script type="text/javascript">
 
     $(window).ready(function() {
+
          $.telnetConnect();
     });
 
@@ -25,7 +26,7 @@
         <div class="col-md-6">
             <form class="form-inline">
                 <div class="form-group">
-                    <label for="connect">Telnet connection:</label>
+                    <label for="connect" id="lblConnect">Telnet</label>
                     <br />
                     <input type="text" id="ip" class="form-control" value="127.0.0.1">
                     <input type="text" id="port" class="form-control" value="23">

@@ -1,9 +1,8 @@
 package telnet.service.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import telnet.service.domain.Device;
-import telnet.service.service.DeviceRepository;
+import telnet.service.model.DeviceRepository;
 import telnet.service.service.DeviceService;
 
 import javax.transaction.Transactional;
@@ -24,7 +23,7 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public List<Device> getDevice(String ip, Long port) {
+    public List<Device> getDevice(String ip, String port) {
         return deviceRepository.findByIpAndPort(ip, port);
     }
 
@@ -46,5 +45,16 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     public Long deleteById(Long id) {
         return deviceRepository.deleteById(id);
+    }
+
+    @Override
+    public Long updateStatus(Long id, Short status) {
+        Device device = deviceRepository.findOne(id);
+        if(device != null) {
+            device.setStatus(status);
+            deviceRepository.save(device);
+        }
+
+        return 0L;
     }
 }

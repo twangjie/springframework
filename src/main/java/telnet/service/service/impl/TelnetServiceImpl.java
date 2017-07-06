@@ -1,17 +1,18 @@
 package telnet.service.service.impl;
 
 import telnet.service.TelnetWebSocketHandlerDecoratorFactory;
+import telnet.service.domain.Device;
 import telnet.service.executor.TelnetExecutor;
 import telnet.service.executor.TelnetExecutorFactory;
 import telnet.service.model.TelnetCommand;
 import telnet.service.model.TelnetConnect;
 import telnet.service.model.TelnetResponse;
+import telnet.service.service.DeviceService;
 import telnet.service.service.TelnetService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.MessageHeaders;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MimeTypeUtils;
@@ -27,6 +28,8 @@ public class TelnetServiceImpl implements TelnetService {
 
     private static final Log logger = LogFactory.getLog(TelnetServiceImpl.class);
 
+    @Autowired
+    private DeviceService deviceService;
 
     @Override
     public TelnetResponse executeTelnetConnect(String sessionId, TelnetConnect command) {
@@ -40,6 +43,8 @@ public class TelnetServiceImpl implements TelnetService {
 
         if(!executor.connect()){
             TelnetWebSocketHandlerDecoratorFactory.getInstance().closeSession(sessionId);
+        }else {
+            deviceService.updateStatus(command.getDeviceId(), (short) Device.Status.CONNECTED.ordinal());
         }
 
         String ret = executor.readResponse();
@@ -57,6 +62,8 @@ public class TelnetServiceImpl implements TelnetService {
         response.setUserId(userId);
 
         TelnetExecutorFactory.getInstance().releaseTelnetExecutor(sessionId);
+
+        deviceService.updateStatus(command.getDeviceId(), (short) Device.Status.DISCONNECTED.ordinal());
 
         return response;
     }

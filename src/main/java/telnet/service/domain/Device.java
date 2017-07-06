@@ -6,29 +6,53 @@ import java.io.Serializable;
 /**
  * Created by 王杰 on 2017/07/04.
  */
-@Entity
+@Entity(name = "moxa")
+@Table(name = "moxa")
 public class Device implements Serializable {
+
+    public  enum Status {
+        ZERO,
+        CONNECTED,
+        DISCONNECTED,
+        UNKNOWN
+    }
 
     private static final long serialVersionUID = 1L;
 
-    protected Device() {
-    }
-
-    public Device(String ip, Long port) {
-        super();
-        this.ip = ip;
-        this.port = port;
-    }
-
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE)
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
 
     @Column(nullable = false)
     private String ip;
 
     @Column(nullable = false)
-    private Long port = 23L;
+    private String port = "23";
+
+    @Column(nullable = false)
+    private String name;
+
+    @Column
+    private String address;
+
+    @Column
+    private String info;
+
+    @Column
+    private Short status = 3;
+
+    public Device() {
+
+    }
+
+    public Device(String ip,String port,String name, String address, String info, Short status) {
+        this.ip = ip;
+        this.port = port;
+        this.name = name;
+        this.address = address;
+        this.info = info;
+        this.status = status;
+    }
 
     public Long getId() {
         return id;
@@ -46,11 +70,11 @@ public class Device implements Serializable {
         this.ip = ip;
     }
 
-    public Long getPort() {
+    public String getPort() {
         return port;
     }
 
-    public void setPort(Long port) {
+    public void setPort(String port) {
         this.port = port;
     }
 
@@ -60,4 +84,35 @@ public class Device implements Serializable {
     }
 
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
+    }
+
+    public Short getStatus() {
+        return status;
+    }
+
+    public void setStatus(Short status) {
+        this.status = status;
+    }
 }

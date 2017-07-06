@@ -1,11 +1,8 @@
-package telnet.service.service;
+package telnet.service.model;
 
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import telnet.service.domain.Device;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -13,7 +10,9 @@ import java.util.List;
  */
 public interface DeviceRepository extends Repository<Device, Long> {
 
-    List<Device> findByIpAndPort(String ip, Long port);
+    Device findOne(Long id);
+
+    List<Device> findByIpAndPort(String ip, String port);
 
     List<Device> findAll();
 
@@ -22,4 +21,5 @@ public interface DeviceRepository extends Repository<Device, Long> {
     void delete(Device device);
 
     Long deleteById(Long id);
+
 }

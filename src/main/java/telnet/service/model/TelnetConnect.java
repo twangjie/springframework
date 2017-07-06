@@ -5,6 +5,7 @@ package telnet.service.model;
  */
 public class TelnetConnect {
 
+    private Long deviceId;
     private String userId;
     private String ipaddr;
     private int port;
@@ -35,5 +36,13 @@ public class TelnetConnect {
 
     public void setPort(int port) {
         this.port = port;
+    }
+
+    public Long getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(Long deviceId) {
+        this.deviceId = deviceId;
     }
 }

@@ -2,6 +2,7 @@ package telnet.service.model;
 
 public class TelnetCommand {
 
+    private int deviceId;
     private String userId;
     private String content;
 
@@ -25,4 +26,11 @@ public class TelnetCommand {
     }
 
 
+    public int getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(int deviceId) {
+        this.deviceId = deviceId;
+    }
 }

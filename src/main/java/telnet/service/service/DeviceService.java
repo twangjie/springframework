@@ -9,7 +9,7 @@ import java.util.List;
  */
 public interface DeviceService {
 
-    List<Device> getDevice(String ip, Long port);
+    List<Device> getDevice(String ip, String port);
 
     List<Device> getDevices();
 
@@ -18,4 +18,6 @@ public interface DeviceService {
     void delete(Device device);
 
     Long deleteById(Long id);
+
+    Long updateStatus(Long id, Short status);
 }

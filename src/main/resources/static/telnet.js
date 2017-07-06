@@ -1,5 +1,6 @@
 var stompClient = null;
 var useId = null;
+var deviceId = 0;
 
 function setConnected(connected) {
     $("#connect").prop("disabled", connected);
@@ -79,11 +80,11 @@ function disconnect() {
 function telnetConnect() {
     var telnetHost = $("#ip").val();
     var telnetPort = $("#port").val();
-    stompClient.send("/app/telnet/connect", {}, JSON.stringify({'userId': useId, 'ipaddr': telnetHost, 'port': telnetPort }));
+    stompClient.send("/app/telnet/connect", {}, JSON.stringify({'deviceId': deviceId, 'userId': useId, 'ipaddr': telnetHost, 'port': telnetPort }));
 }
 
 function telnetDisconnect() {
-    stompClient.send("/app/telnet/disconnect", {}, JSON.stringify({'userId': useId }));
+    stompClient.send("/app/telnet/disconnect", {}, JSON.stringify({'deviceId': deviceId, 'userId': useId }));
 }
 
 function sendCommand() {
@@ -92,10 +93,11 @@ function sendCommand() {
     if (cmd == "exit") {
         disconnect();
     } else {
-        stompClient.send("/app/telnet", {}, JSON.stringify({'userId': useId, 'content': $("#name").val()}));
+        stompClient.send("/app/telnet", {}, JSON.stringify({'deviceId': deviceId, 'userId': useId, 'content': $("#name").val()}));
     }
 
     $("#name").val("");
+    $("#name").focus();
 }
 
 function showGreeting(message) {
@@ -132,9 +134,12 @@ $(function () {
     $.telnetConnect = function () {
         console.log(window.location.href);
 
+        deviceId = $.getUrlParam('devid');
+        var name = $.getUrlParam('name');
         var host = $.getUrlParam('host');
         var port = $.getUrlParam('port');
-        useId = $.getUrlParam('userid');
+
+        $("#lblConnect").text("Telnet " + name);
 
         if (host != null && port != null) {
             $("#ip").val(host);

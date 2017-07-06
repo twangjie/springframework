@@ -13,10 +13,10 @@
     <link href="/webjars/jquery-ui-themes/1.12.1/start/jquery-ui.css" rel="stylesheet" type="text/css" />
 
     <link href="css/dataTables.jqueryui.min.css" rel="stylesheet" type="text/css" />
+    <link href="css/device_table.css" rel="stylesheet" type="text/css" />
 
     <script src="/webjars/jquery/jquery.min.js"></script>
     <script src="/webjars/jquery-ui/1.12.1/jquery-ui.min.js"></script>
-
 
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
@@ -26,46 +26,6 @@
 </head>
 
 <body>
-
-<style type="text/css">
-    table.sample {
-        border-collapse: collapse;
-        width: 50%;
-        margin: 24px;
-        font-size: 1.1em;
-    }
-
-    table.sample th {
-        background: #3e83c9;
-        color: #fff;
-        font-weight: bold;
-        padding: 2px 11px;
-        text-align: left;
-        border-right: 1px solid #fff;
-        line-height: 1.2;
-    }
-
-    table.sample td {
-        padding: 6px 11px;
-        border-bottom: 1px solid #95bce2;
-        vertical-align: top;
-    }
-
-    table.sample td * {
-        padding: 6px 11px;
-    }
-
-    table.sample tr.alt td {
-        background: #ecf6fc;
-    }
-
-    table.sample tr.over td {
-        background: #3d60ec;
-    }
-</style>
-
-
-
 <form>
     <!--<table id="deviceform" class="ui-widget-header" >-->
     <table id="deviceform" class="sample">
@@ -73,16 +33,30 @@
         <tbody>
         <tr>
             <th>id</th>
+            <th>name</th>
+            <th>group</th>
             <th>ip</th>
             <th>port</th>
+            <th>info</th>
+            <th>status</th>
             <th>Delete</th>
         </tr>
         </tbody>
     </table>
 </form>
 <br />
-ip: <input type="text" id="ip" />
-port: <input type="text" id="port"/>
+
+<table id="addDeviceTable" class="sample">
+    <!--<tbody class="ui-widget-content">-->
+    <tbody>
+    <tr><td>name</td><td><input type="text" id="name" /></td></tr>
+    <tr><td>group</td><td><input type="text" id="address" /></td></tr>
+    <tr><td>ip</td><td><input type="text" id="ip" /></td></tr>
+    <tr><td>port</td><td><input type="text" id="port" /></td></tr>
+    <tr><td>info</td><td><input type="text" id="info" /></td></tr>
+    </tbody>
+</table>
+
 <input type="button" value="add" onclick="addDevice()"/>
 
 </body>

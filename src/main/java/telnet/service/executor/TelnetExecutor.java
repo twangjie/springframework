@@ -103,7 +103,7 @@ public class TelnetExecutor {
     public void write(String value) {
         try {
 
-            if(value.equals(' ') || value.isEmpty()){
+            if(value.equals(' ')){
                 out.print(' ');
             }
             else{

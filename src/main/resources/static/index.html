@@ -8,10 +8,10 @@
     <link href="/webjars/jquery-ui-themes/1.12.1/start/jquery-ui.css" rel="stylesheet" type="text/css" />
 
     <link href="css/dataTables.jqueryui.min.css" rel="stylesheet" type="text/css" />
+    <link href="css/device_table.css" rel="stylesheet" type="text/css" />
 
     <script src="/webjars/jquery/jquery.min.js"></script>
     <script src="/webjars/jquery-ui/1.12.1/jquery-ui.min.js"></script>
-
 
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
@@ -20,47 +20,13 @@
 </head>
 
 <body>
+
+
 <script>
-    function telnet(ip, port) {
-        window.open("/telnet.html?host="+ip+"&port="+port);
+    function telnet(devid, name, ip, port) {
+        window.open("/telnet.html?devid="+devid+"&name="+name+"&host="+ip+"&port="+port);
     }
 </script>
-<style type="text/css">
-    table.sample {
-        border-collapse: collapse;
-        width: 50%;
-        margin: 24px;
-        font-size: 1.1em;
-    }
-
-    table.sample th {
-        background: #3e83c9;
-        color: #fff;
-        font-weight: bold;
-        padding: 2px 11px;
-        text-align: left;
-        border-right: 1px solid #fff;
-        line-height: 1.2;
-    }
-
-    table.sample td {
-        padding: 6px 11px;
-        border-bottom: 1px solid #95bce2;
-        vertical-align: top;
-    }
-
-    table.sample td * {
-        padding: 6px 11px;
-    }
-
-    table.sample tr.alt td {
-        background: #ecf6fc;
-    }
-
-    table.sample tr.over td {
-        background: #3d60ec;
-    }
-</style>
 
 <form>
     <!--<table id="deviceform" class="ui-widget-header" >-->
@@ -68,9 +34,13 @@
         <!--<tbody class="ui-widget-content">-->
         <tbody>
         <tr>
-            <th>Id</th>
-            <th>IP</th>
-            <th>Port</th>
+            <th>id</th>
+            <th width="100">name</th>
+            <th>group</th>
+            <th>ip</th>
+            <th>port</th>
+            <th>info</th>
+            <th>status</th>
             <th>Open</th>
         </tr>
         </tbody>
