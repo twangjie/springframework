@@ -8,7 +8,7 @@ var jsonObj = { device: [
 
 function refresh_list() {
     refresh();
-    setTimeout(refresh_list, 10000);
+    setTimeout(refresh_list, 3000);
 }
 
 $(window).ready(function() {
