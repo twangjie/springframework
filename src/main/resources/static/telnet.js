@@ -4,6 +4,39 @@ var deviceId = 0;
 var deviceJSONObj = null;
 var retry = 3;
 
+var currentKeyDown = '';
+var lastKeyDown = '';
+
+function onReady() {
+    $(window).ready(function () {
+        $.telnetConnect();
+
+        $('#cmdtext').bind('keydown', function (event) {
+            // if (event.keyCode == "13") {
+            //     //需要处理的事情
+            //     sendCommand();
+            // }else if(event.keyCode == "9") {
+            //     sendTab();
+            // }
+
+            currentKeyDown = event.key;
+
+            switch (event.key) {
+                case "Tab":
+                    sendTab();
+                    break;
+                case ' ':
+                    sendKey(' ');
+                    break;
+                case "Enter":
+                    sendCommand();
+            }
+
+            lastKeyDown = event.key;
+        });
+    });
+}
+
 function setConnected(connected) {
 
     if (connected) {
@@ -51,7 +84,7 @@ function connect() {
         console.log('Connected: ' );
         stompClient.subscribe('/topic/telnet', function (greeting) {
             var content = JSON.parse(greeting.body).content;
-            showGreeting(content);
+            showCmdResp(content);
         });
 
         if(useId == null) {
@@ -59,9 +92,19 @@ function connect() {
         }
 
         var uri = '/user/' + useId + '/telnet';
-        stompClient.subscribe(uri, function (greeting) {
+        stompClient.subscribe(uri + '/cmdresp', function (greeting) {
             var content = JSON.parse(greeting.body).content;
-            showGreeting(content);
+            showCmdResp(content);
+        });
+
+        stompClient.subscribe(uri + '/tabresp', function (greeting) {
+            var content = JSON.parse(greeting.body).content;
+            showTabResp(content);
+        });
+
+        stompClient.subscribe(uri + '/keydownresp', function (greeting) {
+            var content = JSON.parse(greeting.body).content;
+            showKeyDownResp(content);
         });
 
         telnetConnect();
@@ -93,22 +136,107 @@ function telnetDisconnect() {
 
 function sendCommand() {
 
-    var cmd = $("#name").val();
+    var cmd = $("#cmdtext").val();
     if (cmd == "exit") {
         disconnect();
     } else {
-        stompClient.send("/app/telnet", {}, JSON.stringify({'deviceId': deviceId, 'userId': useId, 'content': $("#name").val()}));
+        if(lastKeyDown == "Tab") {
+            cmd = "\r\n";
+        }else{
+            cmd = cmd.trim() + "\r\n";
+        }
+
+        stompClient.send("/app/telnet/command", {}, JSON.stringify({
+            'deviceId': deviceId,
+            'userId': useId,
+            'content': cmd
+        }));
     }
 
-    $("#name").val("");
-    $("#name").focus();
+    $("#cmdtext").val("");
+    $("#cmdtext").focus();
 }
 
-function showGreeting(message) {
+function sendTab() {
+
+    var cmd = $("#cmdtext").val();
+    if (cmd != null) {
+        cmd += "\t";
+        stompClient.send("/app/telnet/tab", {}, JSON.stringify({'deviceId': deviceId, 'userId': useId, 'content': cmd}));
+    }
+
+    $("#cmdtext").focus();
+}
+
+function sendKey(key) {
+
+    if (key != null) {
+        stompClient.send("/app/telnet/keydown", {}, JSON.stringify({'deviceId': deviceId, 'userId': useId, 'content': key}));
+    }
+
+    $("#cmdtext").focus();
+}
+
+function showCmdResp(message) {
+
+    if(message.length == 0) {
+        return;
+    }
 
     var text = htmlEncode(message);
-    $("#greetings").append(text);
-    $('#greetings').scrollTop( $('#greetings')[0].scrollHeight );
+    $("#greetings").append("<li>" + text + "</li>");
+    $('#divList').scrollTop( $('#divList')[0].scrollHeight );
+}
+
+function showTabResp(message) {
+
+    if (message.length == 0) {
+        return;
+    }
+
+    var words = message.split('\b');
+    var text = words[words.length - 1];
+
+    if (text.indexOf("\r\n") > 0) {
+        var lines = text.split("\r\n");
+        for (var i = 0; i < lines.length; i++) {
+            showCmdResp(lines[i]);
+        }
+
+    } else {
+        $("#cmdtext").val(text);
+    }
+    $("#cmdtext").focus();
+}
+
+function showKeyDownResp(message) {
+
+    //var words = message.split('\b');
+    //var text = words[words.length - 1];
+    if (message.length == 0) {
+        return;
+    }
+
+    if (currentKeyDown == '\t') {
+        var text = $("#cmdtext").val();
+        text += "\t";
+        text += message;
+        $("#cmdtext").val(text);
+    } else if (currentKeyDown == "Enter") {
+        $("#cmdtext").val("");
+    } else if (currentKeyDown == ' ') {
+        if (message.indexOf("\r\n") > 0) {
+            var lines = message.split("\r\n");
+            for (var i = 0; i < lines.length; i++) {
+                showCmdResp(lines[i]);
+            }
+
+        } else {
+            showCmdResp(message);
+        }
+    }
+
+    $('#divList').scrollTop($('#divList')[0].scrollHeight);
 }
 
 function htmlEncode(value){

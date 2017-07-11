@@ -113,14 +113,20 @@ public class TelnetExecutor {
      */
     public void write(String value) {
         try {
-
-            if(value.equals(' ')){
+            if (value.equals(" \r\n")) {
                 out.print(' ');
+            } else {
+                out.print(value);
             }
-            else{
-                out.println(value);
-            }
+            out.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
+    public void write(char value) {
+        try {
+            out.write(value);
             out.flush();
         } catch (Exception e) {
             e.printStackTrace();
@@ -142,6 +148,18 @@ public class TelnetExecutor {
         }
         return null;
     }
+
+    public String sendCommand(char command) {
+        try {
+            write(command);
+            return readResponse();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
     /**
      * 关闭连接
      *

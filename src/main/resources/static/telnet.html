@@ -6,6 +6,7 @@
 
     <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="css/device_table.css" rel="stylesheet" type="text/css"/>
+    <link href="css/webconsole.css" rel="stylesheet" type="text/css"/>
 
     <script src="/webjars/jquery/jquery.min.js"></script>
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
@@ -15,10 +16,7 @@
 <body>
 <script type="text/javascript">
 
-    $(window).ready(function () {
-
-        $.telnetConnect();
-    });
+    onReady();
 
 </script>
 <noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
@@ -26,20 +24,6 @@
     Javascript and reload this page!</h2></noscript>
 <div id="main-content" class="container">
     <div class="row">
-        <!--<div class="col-md-6">-->
-        <!--<form class="form-inline">-->
-        <!--<div class="form-group">-->
-        <!--<label for="connect" id="lblConnect">Telnet</label>-->
-        <!--<br />-->
-        <!--<input type="text" id="ip" class="form-control" value="127.0.0.1">-->
-        <!--<input type="text" id="port" class="form-control" value="23">-->
-
-        <!--<button id="connect" class="btn btn-default" type="submit">Connect</button>-->
-        <!--<button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect-->
-        <!--</button>-->
-        <!--</div>-->
-        <!--</form>-->
-        <!--</div>-->
         <table id="deviceInfo" class="sample">
             <tbody>
             <tr>
@@ -63,19 +47,16 @@
             </tbody>
         </table>
     </div>
-    <div class="col-md-6">
-        <form class="form-inline">
-            <div class="form-group">
-                <label for="name">命令</label>
-                <input type="text" id="name" class="form-control" placeholder="...">
-            </div>
-            <button id="send" class="btn btn-default" type="submit">发送</button>
-        </form>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div id="greetings"
-                 style="width:850px; height: 600px;border: 1px #ccc solid; overflow-y: scroll;float: left;"></div>
+
+    <div class="window">
+        <div class="webConsole-title">
+            <!--<img src="css/1.jpg">-->
+            <span>Web Telnet</span>
+        </div>
+        <div id="divList" style="overflow: scroll;height: 400px; background: black;">
+            <ul id="greetings" class="webConsole-ul">
+            </ul>
+            <input type="text" class="webConsole-input"  name="" id='cmdtext' autocomplete="off">
         </div>
     </div>
     </form>

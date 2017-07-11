@@ -49,7 +49,7 @@ public class TelnetController {
 
 //        simpMessageSendingOperations.convertAndSendToUser(message.getUserId(), "/telnet", message);
         TelnetResponse response = telnetService.executeTelnetConnect(getSessionId(headers), message);
-        simpMessageSendingOperations.convertAndSendToUser(response.getUserId(), "/telnet", response);
+        simpMessageSendingOperations.convertAndSendToUser(response.getUserId(), "/telnet/cmdresp", response);
     }
 
     @MessageMapping("/telnet/disconnect")
@@ -57,16 +57,33 @@ public class TelnetController {
 
 //        simpMessageSendingOperations.convertAndSendToUser(message.getUserId(), "/telnet", message);
         TelnetResponse response = telnetService.executeTelnetDisconnect(getSessionId(headers), message);
-        simpMessageSendingOperations.convertAndSendToUser(response.getUserId(), "/telnet", response);
+        simpMessageSendingOperations.convertAndSendToUser(response.getUserId(), "/telnet/cmdresp", response);
     }
 
-    @MessageMapping("/telnet")
+    @MessageMapping("/telnet/command")
     public void handleCommand(TelnetCommand message, @Headers final Map<String, Object> headers) {
 
-//        simpMessageSendingOperations.convertAndSendToUser(message.getUserId(), "/telnet", message);
         TelnetResponse response = telnetService.executeTelnetCommand(getSessionId(headers), message);
-        simpMessageSendingOperations.convertAndSendToUser(response.getUserId(), "/telnet", response);
+        if(response.getContent().length() > 0) {
+            simpMessageSendingOperations.convertAndSendToUser(response.getUserId(), "/telnet/cmdresp", response);
+        }
     }
 
+    @MessageMapping("/telnet/tab")
+    public void handleTab(TelnetCommand message, @Headers final Map<String, Object> headers) {
 
+        TelnetResponse response = telnetService.executeTelnetCommand(getSessionId(headers), message);
+        if(response.getContent().length() > 0) {
+            simpMessageSendingOperations.convertAndSendToUser(response.getUserId(), "/telnet/tabresp", response);
+        }
+    }
+
+    @MessageMapping("/telnet/keydown")
+    public synchronized void handleKeydown(TelnetCommand message, @Headers final Map<String, Object> headers) {
+
+        TelnetResponse response = telnetService.executeTelnetKeydown(getSessionId(headers), message);
+        if(response.getContent().length() > 0) {
+            simpMessageSendingOperations.convertAndSendToUser(response.getUserId(), "/telnet/keydownresp", response);
+        }
+    }
 }

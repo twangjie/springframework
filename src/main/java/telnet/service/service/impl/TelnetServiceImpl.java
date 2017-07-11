@@ -84,6 +84,20 @@ public class TelnetServiceImpl implements TelnetService {
         return response;
     }
 
+    @Override
+    public TelnetResponse executeTelnetKeydown(String sessionId, TelnetCommand command) {
+        String userId = command.getUserId();
+
+        TelnetResponse response = new TelnetResponse();
+        response.setUserId(userId);
+
+        TelnetExecutor executor = TelnetExecutorFactory.getInstance().getTelnetExecutor(sessionId);
+        if (executor != null) {
+            response.setContent(executor.sendCommand(command.getContent().charAt(0)));
+        }
+        return response;
+    }
+
     @Scheduled(fixedDelay = 1500)
     public void sendTradeNotifications() {
 

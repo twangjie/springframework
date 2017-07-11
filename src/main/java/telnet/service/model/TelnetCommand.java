@@ -25,6 +25,10 @@ public class TelnetCommand {
         return content;
     }
 
+    public void setContent(String content) {
+        this.content = content;
+    }
+
 
     public int getDeviceId() {
         return deviceId;

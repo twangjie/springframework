@@ -11,6 +11,8 @@ public interface TelnetService {
 
     TelnetResponse executeTelnetCommand(String sessionId, TelnetCommand command);
 
+    TelnetResponse executeTelnetKeydown(String sessionId, TelnetCommand command);
+
     TelnetResponse executeTelnetConnect(String sessionId, TelnetConnect command);
 
     TelnetResponse executeTelnetDisconnect(String sessionId, TelnetConnect command);
