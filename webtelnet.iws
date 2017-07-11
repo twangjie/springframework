@@ -2,21 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2bbea24c-3599-416e-99fc-775e24f0aa20" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/resources/static/images/1.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/resources/static/images/2.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/resources/static/images/3.jpg" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/telnet/service/controller/TelnetController.java" afterPath="$PROJECT_DIR$/src/main/java/telnet/service/controller/TelnetController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/telnet/service/executor/TelnetExecutor.java" afterPath="$PROJECT_DIR$/src/main/java/telnet/service/executor/TelnetExecutor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/telnet/service/service/TelnetService.java" afterPath="$PROJECT_DIR$/src/main/java/telnet/service/service/TelnetService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/telnet/service/service/impl/TelnetServiceImpl.java" afterPath="$PROJECT_DIR$/src/main/java/telnet/service/service/impl/TelnetServiceImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/static/device.html" afterPath="$PROJECT_DIR$/src/main/resources/static/device.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/static/index.html" afterPath="$PROJECT_DIR$/src/main/resources/static/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/static/telnet.html" afterPath="$PROJECT_DIR$/src/main/resources/static/telnet.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/webtelnet.iws" afterPath="$PROJECT_DIR$/webtelnet.iws" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/resources/static/device.js" afterPath="$PROJECT_DIR$/src/main/resources/static/js/device.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/resources/static/lib/w3.css" afterPath="$PROJECT_DIR$/src/main/resources/static/css/w3.css" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/resources/static/main.css" afterPath="$PROJECT_DIR$/src/main/resources/static/css/main.css" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/resources/static/telnet.js" afterPath="$PROJECT_DIR$/src/main/resources/static/js/telnet.js" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -35,8 +21,8 @@
       <file leaf-file-name="telnet.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/resources/static/js/telnet.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-19">
-              <caret line="158" column="26" lean-forward="true" selection-start-line="158" selection-start-column="26" selection-end-line="158" selection-end-column="26" />
+            <state relative-caret-position="323">
+              <caret line="176" column="0" lean-forward="true" selection-start-line="176" selection-start-column="0" selection-end-line="176" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -1277,8 +1263,16 @@
       <workItem from="1499517496854" duration="3714000" />
       <workItem from="1499651818637" duration="23906000" />
       <workItem from="1499769680337" duration="18000" />
-      <workItem from="1499782178182" duration="6049000" />
+      <workItem from="1499782178182" duration="6307000" />
     </task>
+    <task id="LOCAL-00001" summary="update ..">
+      <created>1499788398139</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1499788398139</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -1302,7 +1296,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="153560000" />
+    <option name="totallyTimeSpent" value="153818000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1335,7 +1329,7 @@
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27874187" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27874187" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.36511377" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Spring" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32936078" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27982646" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -1889,8 +1883,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/static/js/telnet.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-19">
-          <caret line="158" column="26" lean-forward="true" selection-start-line="158" selection-start-column="26" selection-end-line="158" selection-end-column="26" />
+        <state relative-caret-position="323">
+          <caret line="176" column="0" lean-forward="true" selection-start-line="176" selection-start-column="0" selection-end-line="176" selection-end-column="0" />
           <folding />
         </state>
       </provider>
