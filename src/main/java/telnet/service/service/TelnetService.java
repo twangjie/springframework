@@ -9,11 +9,13 @@ import telnet.service.model.TelnetResponse;
  */
 public interface TelnetService {
 
-    TelnetResponse executeTelnetCommand(String sessionId, TelnetCommand command);
+    void executeTelnetCommand(String sessionId, TelnetCommand command);
 
-    TelnetResponse executeTelnetKeydown(String sessionId, TelnetCommand command);
+    void executeTelnetTab(String sessionId, TelnetCommand command);
 
-    TelnetResponse executeTelnetConnect(String sessionId, TelnetConnect command);
+    void executeTelnetKeydown(String sessionId, TelnetCommand command);
 
-    TelnetResponse executeTelnetDisconnect(String sessionId, TelnetConnect command);
+    void executeTelnetConnect(String sessionId, TelnetConnect command);
+
+    void executeTelnetDisconnect(String sessionId, TelnetConnect command);
 }

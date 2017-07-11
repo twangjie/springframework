@@ -6,7 +6,9 @@ import java.io.PrintStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.net.telnet.TelnetClient;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import telnet.service.domain.Device;
+import telnet.service.model.TelnetResponse;
 import telnet.service.service.DeviceService;
 
 /**
@@ -24,7 +26,11 @@ public class TelnetExecutor {
 
     private DeviceService deviceService;
 
+    private SimpMessageSendingOperations simpMessageSendingOperations;
+
     private boolean connected = false;
+
+    private ReadResponseThread readResponseThread;
 
     public String getUserId() {
         return userId;
@@ -55,6 +61,9 @@ public class TelnetExecutor {
 
             deviceService.updateStatus(device.getId(), Device.CONNECTED);
             connected = true;
+
+            readResponseThread = new ReadResponseThread();
+            readResponseThread.start();
 
         }catch (Exception ex) {
             ex.printStackTrace();
@@ -173,8 +182,69 @@ public class TelnetExecutor {
                 deviceService.updateStatus(device.getId(), Device.UNKNOWN);
             }
 
+            connected = false;
+
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void setSimpMessageSendingOperations(SimpMessageSendingOperations simpMessageSendingOperations) {
+        this.simpMessageSendingOperations = simpMessageSendingOperations;
+    }
+
+    class ReadResponseThread extends Thread {
+
+        public ReadResponseThread() {
+
+        }
+
+
+        @Override
+        public void run() {
+
+            while (connected) {
+
+                if(in == null) {
+                    break;
+                }
+
+                String response = "";
+                StringBuilder sb = new StringBuilder();
+
+                try {
+
+                    byte[] buff = new byte[4096];
+
+                    int available = 0;
+                    while ((available = in.available()) > 0) {
+                        int ret = in.read(buff);
+                        if (ret > 0) {
+                            sb.append(new String(buff, 0, ret));
+                        }
+                    }
+
+                    if(sb.length() > 0) {
+                        TelnetResponse telnetResponse = new TelnetResponse();
+                        telnetResponse.setUserId(userId);
+                        telnetResponse.setContent(sb.toString());
+                        simpMessageSendingOperations.convertAndSendToUser(userId, "/telnet/cmdresp", telnetResponse);
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    logger.error("Exception while reading socket:" + e.getMessage());
+
+                    disconnect();
+                    break;
+                }
+
+                try {
+                    Thread.sleep(50);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }

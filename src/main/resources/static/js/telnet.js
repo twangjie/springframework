@@ -24,7 +24,7 @@ function onReady() {
             switch (event.key) {
                 case "Tab":
                     sendTab();
-                    break;
+                    return false;
                 case ' ':
                     sendKey(' ');
                     break;
@@ -59,6 +59,10 @@ function S4() {
 }
 function guid() {
     return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+}
+
+function telnet(devid, name, ip, port) {
+    window.open("/telnet.html?devid="+devid);
 }
 
 function connect() {
@@ -116,6 +120,9 @@ function connect() {
 function disconnect() {
 
     telnetDisconnect();
+
+    $("#cmdtext").val("");
+    $("#cmdtext").focus();
 
     if (stompClient != null) {
         stompClient.disconnect();
