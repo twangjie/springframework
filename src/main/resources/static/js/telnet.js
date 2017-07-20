@@ -11,13 +11,12 @@ function onReady() {
     $(window).ready(function () {
         $.telnetConnect();
 
+        $('#divList').bind('mousedown', function (event) {
+            $('#cmdtext').focus();
+            return false;
+        });
+
         $('#cmdtext').bind('keydown', function (event) {
-            // if (event.keyCode == "13") {
-            //     //需要处理的事情
-            //     sendCommand();
-            // }else if(event.keyCode == "9") {
-            //     sendTab();
-            // }
 
             currentKeyDown = event.key;
 
@@ -26,7 +25,12 @@ function onReady() {
                     sendTab();
                     return false;
                 case ' ':
-                    sendKey(' ');
+                    var txt = $('#cmdtext').val();
+                    txt = txt.trim();
+                    if(txt.length == 0) {
+                        sendKey(' ');
+                    }
+
                     break;
                 case "Enter":
                     sendCommand();
@@ -57,6 +61,7 @@ function setConnected(connected) {
 function S4() {
     return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
 }
+
 function guid() {
     return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
 }
@@ -190,7 +195,14 @@ function showCmdResp(message) {
         return;
     }
 
-    var text = htmlEncode(message);
+    if(message.length == 1 && currentKeyDown == message) {
+        $("#cmdtext").val("");
+        return;
+    }
+    var text = message;
+    //  response = response.replaceAll("\\e\\[[\\d;]*[^\\d;]","");  // \e matches escape character
+    // text = text.replace("\\e\\[[\\d;]*[^\\d;]","");
+    text = htmlEncode(text);
     $("#greetings").append("<li>" + text + "</li>");
     $('#divList').scrollTop( $('#divList')[0].scrollHeight );
 }
@@ -218,8 +230,6 @@ function showTabResp(message) {
 
 function showKeyDownResp(message) {
 
-    //var words = message.split('\b');
-    //var text = words[words.length - 1];
     if (message.length == 0) {
         return;
     }
@@ -247,8 +257,12 @@ function showKeyDownResp(message) {
 }
 
 function htmlEncode(value){
+
     value = $('<div/>').text(value).html();
-    value = value.replace(/\r\n|\n|\r/g, '<br />');
+    value = value.replace(/[ ]/g,"&nbsp;");
+    value = value.replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;');
+    value = value.replace(/\r\n|\n|\r/g, '<br/>');
+
     return value;
 }
 //Html解码获取Html实体

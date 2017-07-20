@@ -103,38 +103,12 @@ public class TelnetServiceImpl implements TelnetService {
 
     @Override
     public void executeTelnetTab(String sessionId, TelnetCommand command) {
-
-        String userId = command.getUserId();
-
-        TelnetResponse response = new TelnetResponse();
-        response.setUserId(userId);
-
-        TelnetExecutor executor = TelnetExecutorFactory.getInstance().getTelnetExecutor(sessionId);
-        if (executor != null) {
-            response.setContent(executor.sendCommand(command.getContent()));
-        }
-
-//        if (response.getContent().length() > 0) {
-//            simpMessageSendingOperations.convertAndSendToUser(response.getUserId(), "/telnet/tabresp", response);
-//        }
+        executeTelnetCommand(sessionId, command);
     }
 
     @Override
     public void executeTelnetKeydown(String sessionId, TelnetCommand command) {
-        String userId = command.getUserId();
-
-        TelnetResponse response = new TelnetResponse();
-        response.setUserId(userId);
-
-        TelnetExecutor executor = TelnetExecutorFactory.getInstance().getTelnetExecutor(sessionId);
-        if (executor != null) {
-            response.setContent(executor.sendCommand(command.getContent().charAt(0)));
-        }
-
-//        if (response.getContent().length() > 0) {
-//            simpMessageSendingOperations.convertAndSendToUser(response.getUserId(), "/telnet/keydownresp", response);
-//        }
-
+        executeTelnetCommand(sessionId, command);
     }
 
     @Scheduled(fixedDelay = 5000)
