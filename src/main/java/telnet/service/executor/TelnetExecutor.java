@@ -3,6 +3,8 @@ package telnet.service.executor;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.nio.charset.Charset;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -21,7 +23,7 @@ public class TelnetExecutor {
 
     private String userId;
     private Device device;
-    private TelnetClient telnet = new TelnetClient();
+    private TelnetClient telnet = new TelnetClient("VT100");
     private InputStream in;
     private PrintStream out;
 
@@ -29,7 +31,8 @@ public class TelnetExecutor {
 
     private SimpMessageSendingOperations simpMessageSendingOperations;
 
-    private boolean connected = false;
+    private AtomicBoolean connected = new AtomicBoolean(false);
+    private AtomicLong responseCount = new AtomicLong(0);
 
     private ReadResponseThread readResponseThread;
 
@@ -66,11 +69,12 @@ public class TelnetExecutor {
                     true, true));
 
             telnet.setCharset(Charset.forName("utf-8"));
+            telnet.setDefaultTimeout(300000);
             telnet.connect(device.getIp(), Integer.parseInt(device.getPort()));
             telnet.setKeepAlive(true);
             telnet.setTcpNoDelay(true);
 
-            connected = true;
+            connected.set(true);
 
             in = telnet.getInputStream();
             out = new PrintStream(telnet.getOutputStream());
@@ -87,6 +91,7 @@ public class TelnetExecutor {
             logger.error(ex.getMessage(), ex);
 
             deviceService.updateStatus(device.getId(), Device.UNKNOWN);
+            connected.set(false);
 
             return false;
         }
@@ -132,6 +137,7 @@ public class TelnetExecutor {
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("Exception while reading socket:" + e.getMessage());
+            connected.set(false);
         }
 
         return response;
@@ -144,6 +150,12 @@ public class TelnetExecutor {
      */
     private void write(String value) {
         try {
+
+            if(responseCount.get() == 0) {
+                sendResponse("Server replied nothing...");
+                disconnect();
+                return;
+            }
 
             if (!telnet.isConnected() || !telnet.isAvailable()) {
                 disconnect();
@@ -159,16 +171,25 @@ public class TelnetExecutor {
         } catch (Exception ex) {
             ex.printStackTrace();
             logger.error(ex.getMessage(), ex);
+            connected.set(false);
         }
     }
 
     private void write(char value) {
+
+        if(responseCount.get() == 0) {
+            sendResponse("Server replied nothing...");
+            disconnect();
+            return;
+        }
+
         try {
             out.write(value);
             out.flush();
         } catch (Exception ex) {
             ex.printStackTrace();
             logger.error(ex.getMessage(), ex);
+            connected.set(false);
         }
     }
 
@@ -204,13 +225,13 @@ public class TelnetExecutor {
     public void disconnect() {
         try {
             telnet.disconnect();
-            if (connected) {
+            if (connected.get()) {
                 deviceService.updateStatus(device.getId(), Device.DISCONNECTED);
             } else {
                 deviceService.updateStatus(device.getId(), Device.UNKNOWN);
             }
 
-            connected = false;
+            connected.set(false);
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -220,6 +241,13 @@ public class TelnetExecutor {
 
     public void setSimpMessageSendingOperations(SimpMessageSendingOperations simpMessageSendingOperations) {
         this.simpMessageSendingOperations = simpMessageSendingOperations;
+    }
+
+    private void sendResponse(String reply) {
+        TelnetResponse telnetResponse = new TelnetResponse();
+        telnetResponse.setUserId(userId);
+        telnetResponse.setContent(reply);
+        simpMessageSendingOperations.convertAndSendToUser(userId, "/telnet/cmdresp", telnetResponse);
     }
 
     class ReadResponseThread extends Thread implements TelnetNotificationHandler {
@@ -232,7 +260,7 @@ public class TelnetExecutor {
         @Override
         public void run() {
 
-            while (connected) {
+            while (connected.get()) {
 
                 if (in == null) {
                     break;
@@ -250,6 +278,8 @@ public class TelnetExecutor {
                         int ret = in.read(buff);
                         if (ret > 0) {
                             sb.append(new String(buff, 0, ret));
+
+                            responseCount.addAndGet(ret);
                         }
                     }
 
@@ -259,12 +289,9 @@ public class TelnetExecutor {
 
                         // https://stackoverflow.com/questions/25189651/how-to-remove-ansi-control-chars-vt100-from-a-java-string
                         // reply = reply.replaceAll("\u001B\\[[\\d;]*[^\\d;]","");
-                        reply = reply.replaceAll("\\e\\[[\\d;]*[^\\d;]","");  // \e matches escape character
+                        reply = reply.replaceAll("\\e\\[[\\d;]*[^\\d;]", "");  // \e matches escape character
 
-                        TelnetResponse telnetResponse = new TelnetResponse();
-                        telnetResponse.setUserId(userId);
-                        telnetResponse.setContent(reply);
-                        simpMessageSendingOperations.convertAndSendToUser(userId, "/telnet/cmdresp", telnetResponse);
+                        sendResponse(reply);
                     }
 
                 } catch (Exception ex) {

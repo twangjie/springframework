@@ -52,18 +52,19 @@ public class TelnetServiceImpl implements TelnetService {
         executor.setDeviceService(deviceService);
         executor.setSimpMessageSendingOperations(simpMessageSendingOperations);
 
-        String ret = "";
+//        String ret = "";
         if (!executor.connect()) {
             TelnetWebSocketHandlerDecoratorFactory.getInstance().closeSession(sessionId);
-        } else {
-            ret = executor.readResponse();
         }
-
-        response.setContent(ret);
-
-        if (response.getContent().length() > 0) {
-            simpMessageSendingOperations.convertAndSendToUser(response.getUserId(), "/telnet/cmdresp", response);
-        }
+//        else {
+//            ret = executor.readResponse();
+//        }
+//
+//        response.setContent(ret);
+//
+//        if (response.getContent().length() > 0) {
+//            simpMessageSendingOperations.convertAndSendToUser(response.getUserId(), "/telnet/cmdresp", response);
+//        }
 
     }
 

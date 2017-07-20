@@ -3,9 +3,12 @@ var useId = null;
 var deviceId = 0;
 var deviceJSONObj = null;
 var retry = 3;
-
+var connected = false;
 var currentKeyDown = '';
 var lastKeyDown = '';
+
+var connectTime = 0;
+var lastResponseTime = 0;
 
 function onReady() {
     $(window).ready(function () {
@@ -43,19 +46,20 @@ function onReady() {
 
 function setConnected(connected) {
 
+    this.connected = connected;
+
     if (connected) {
         $("#lblStatus").text("已连接");
-        $("#conversation").show();
     }
     else {
-        if (retry <= 0)
+        if (retry <= 0) {
             $("#lblStatus").text("连接失败");
-        else
+        }
+        else {
             $("#lblStatus").text("未连接");
-
-        $("#conversation").hide();
+        }
     }
-    $("#greetings").html("");
+    // $("#greetings").html("");
 }
 
 function S4() {
@@ -78,12 +82,6 @@ function connect() {
     var stompFailureCallback = function (error) {
         disconnect();
         console.log('STOMP: ' + error);
-        if(retry > 0) {
-            setTimeout(connect, 3000);
-            console.log('STOMP: Reconecting in 3 seconds');
-        }
-
-        retry--;
     };
 
     var stompSuccessCallback = function () {
@@ -117,6 +115,9 @@ function connect() {
         });
 
         telnetConnect();
+
+        connectTime = new Date().getTime();
+        setTimeout(respTimeoutCheck, 1000);
     };
 
     stompClient.connect({}, stompSuccessCallback, stompFailureCallback);
@@ -128,6 +129,7 @@ function disconnect() {
 
     $("#cmdtext").val("");
     $("#cmdtext").focus();
+    $("#cmdtext").attr("disabled",true);
 
     if (stompClient != null) {
         stompClient.disconnect();
@@ -190,6 +192,8 @@ function sendKey(key) {
 }
 
 function showCmdResp(message) {
+
+    lastResponseTime = new Date().getTime();
 
     if(message.length == 0) {
         return;
@@ -284,6 +288,25 @@ function findDeviceByid(id) {
     return JSON.parse(respText);
 }
 
+function respTimeoutCheck() {
+
+    var now = new Date().getTime();
+
+    if (lastResponseTime == 0) {
+        if (now - connectTime > 10000) {
+            disconnect();
+        }
+    } else {
+        if (now - lastResponseTime > 300 * 1000) {
+            disconnect();
+        }
+    }
+
+    if (this.connected) {
+        setTimeout(respTimeoutCheck, 1000);
+    }
+}
+
 $(function () {
     $("form").on('submit', function (e) {
         e.preventDefault();
@@ -311,6 +334,7 @@ $(function () {
         var port = deviceJSONObj.port;
         var info = deviceJSONObj.info;
 
+        $("#webConsole-title").text(name);
         $("#lblName").text(name);
         $("#lblAddress").text(address);
         $("#lblIP").text(host);
