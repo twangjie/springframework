@@ -17,7 +17,7 @@ function onReady() {
 
         $.telnetConnect();
 
-        $("body").eq(0).bind("mousedown",function(event){
+        $("body").eq(0).bind("mousedown", function (event) {
             //$('#greetings').focus();
             return false;
         });
@@ -25,34 +25,23 @@ function onReady() {
         $('body').bind('keydown', function (event) {
             currentKeyDown = event.key;
 
-            if(event.key == "F12") {
+            if (event.key == "F5") {
+                return !connected;
+            }
+
+            if (event.keyCode >= 112 && event.keyCode <= 123) {
                 return true;
             }
 
-            if(!connected && event.key == "F5") {
+            if (event.key == "Shift"
+                || event.key == "Alt"
+                || event.key == "Ctrl"
+                || event.key == "CapsLock"
+                || event.key == "Control") {
                 return true;
             }
 
-            if(event.key == "Shift") {
-                return true;
-            }
-
-            if((event.keyCode < 65 || event.keyCode > 90) // A-Z
-                && event.key != " "
-                && event.key != "Tab"
-                && event.key != "Backspace"
-                && event.key != "Enter"
-                && event.key != "?"
-                && event.key != "/"
-                && event.key != "+"
-                && event.key != "="
-                && event.key != "-"
-                && event.key != "/"
-                && event.key != "\\") {
-                return false;
-            }
-
-            if(!connected) {
+            if (!connected) {
                 alert("连接已断开");
                 return true;
             }
@@ -68,6 +57,9 @@ function onReady() {
                     sendKey('\r');
                     sendKey('\n');
                     break;
+                case "Spacebar":
+                    sendKey(' ');
+                    break
                 default:
                     sendKey(event.key);
             }

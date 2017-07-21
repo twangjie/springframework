@@ -76,6 +76,9 @@ public class DeviceServiceImpl implements DeviceService {
     public Long updateStatus(Long id, Short status) {
 
         Device device = findByIdFromDeviceList(id);
+        if (device == null){
+            return 0L;
+        }
 
         if (status == Device.CONNECTFAILED) {
             long failedCount = device.increaseConnectFailedCount();
@@ -90,10 +93,8 @@ public class DeviceServiceImpl implements DeviceService {
 
         updateDeviceList(device);
 
-        if (device != null) {
-            device.setStatus(status);
-            deviceRepository.save(device);
-        }
+        device.setStatus(status);
+        deviceRepository.save(device);
 
         return 1L;
     }

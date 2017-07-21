@@ -88,11 +88,15 @@ public class TelnetExecutor {
             deviceService.updateStatus(device.getId(), Device.CONNECTED);
 
         } catch (Exception ex) {
+
+            connected.set(false);
+
             ex.printStackTrace();
             logger.error(ex.getMessage(), ex);
 
+            forceReleaseSession("Server replied nothing...");
+
             deviceService.updateStatus(device.getId(), Device.CONNECTFAILED);
-            connected.set(false);
 
             return false;
         }

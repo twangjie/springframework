@@ -40,6 +40,7 @@ public class Device implements Serializable {
     @Column
     private Short status = DISCONNECTED;
 
+    @Column
     private Long connectFailedCount = new Long(0);
 
     public Device() {
@@ -117,10 +118,16 @@ public class Device implements Serializable {
     }
 
     public long increaseConnectFailedCount() {
-        return this.connectFailedCount++;
+        if(connectFailedCount == null) {
+            connectFailedCount = new Long(0);
+        }
+        return ++connectFailedCount;
     }
 
     public void resetConnectFailedCount() {
+        if(connectFailedCount == null) {
+            connectFailedCount = new Long(0);
+        }
         connectFailedCount = 0L;
     }
 }
