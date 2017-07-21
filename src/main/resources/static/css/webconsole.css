@@ -38,6 +38,7 @@
     list-style:none;
     color: #ffffff;
     background: black;
+    width: inherit;
 }
 
 .webConsole-input {

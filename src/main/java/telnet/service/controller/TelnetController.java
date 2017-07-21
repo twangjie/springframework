@@ -1,19 +1,16 @@
 package telnet.service.controller;
 
-import org.springframework.messaging.handler.annotation.Headers;
-import telnet.service.model.TelnetCommand;
-import telnet.service.model.TelnetConnect;
-import telnet.service.model.TelnetResponse;
-import telnet.service.service.TelnetService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
+import telnet.service.model.TelnetCommand;
+import telnet.service.model.TelnetConnect;
+import telnet.service.service.TelnetService;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 @Controller

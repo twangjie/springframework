@@ -12,31 +12,64 @@ var lastResponseTime = 0;
 
 function onReady() {
     $(window).ready(function () {
+
+        $("#lblStatus").text("连接中");
+
         $.telnetConnect();
 
-        $('#divList').bind('mousedown', function (event) {
-            $('#cmdtext').focus();
+        $("body").eq(0).bind("mousedown",function(event){
+            //$('#greetings').focus();
             return false;
         });
 
-        $('#cmdtext').bind('keydown', function (event) {
-
+        $('body').bind('keydown', function (event) {
             currentKeyDown = event.key;
+
+            if(event.key == "F12") {
+                return true;
+            }
+
+            if(!connected && event.key == "F5") {
+                return true;
+            }
+
+            if(event.key == "Shift") {
+                return true;
+            }
+
+            if((event.keyCode < 65 || event.keyCode > 90) // A-Z
+                && event.key != " "
+                && event.key != "Tab"
+                && event.key != "Backspace"
+                && event.key != "Enter"
+                && event.key != "?"
+                && event.key != "/"
+                && event.key != "+"
+                && event.key != "="
+                && event.key != "-"
+                && event.key != "/"
+                && event.key != "\\") {
+                return false;
+            }
+
+            if(!connected) {
+                alert("连接已断开");
+                return true;
+            }
 
             switch (event.key) {
                 case "Tab":
                     sendTab();
                     return false;
-                case ' ':
-                    var txt = $('#cmdtext').val();
-                    txt = txt.trim();
-                    if(txt.length == 0) {
-                        sendKey(' ');
-                    }
-
+                case "Backspace":
+                    sendKey('\b');
                     break;
                 case "Enter":
-                    sendCommand();
+                    sendKey('\r');
+                    sendKey('\n');
+                    break;
+                default:
+                    sendKey(event.key);
             }
 
             lastKeyDown = event.key;
@@ -59,7 +92,6 @@ function setConnected(connected) {
             $("#lblStatus").text("未连接");
         }
     }
-    // $("#greetings").html("");
 }
 
 function S4() {
@@ -130,10 +162,6 @@ function disconnect() {
 
     telnetDisconnect();
 
-    $("#cmdtext").val("");
-    $("#cmdtext").focus();
-    $("#cmdtext").attr("disabled",true);
-
     if (stompClient != null) {
         stompClient.disconnect();
     }
@@ -169,20 +197,11 @@ function sendCommand() {
             'content': cmd
         }));
     }
-
-    $("#cmdtext").val("");
-    $("#cmdtext").focus();
 }
 
 function sendTab() {
 
-    var cmd = $("#cmdtext").val();
-    if (cmd != null) {
-        cmd += "\t";
-        stompClient.send("/app/telnet/tab", {}, JSON.stringify({'deviceId': deviceId, 'userId': useId, 'content': cmd}));
-    }
-
-    $("#cmdtext").focus();
+    stompClient.send("/app/telnet/tab", {}, JSON.stringify({'deviceId': deviceId, 'userId': useId, 'content': '\t'}));
 }
 
 function sendKey(key) {
@@ -190,28 +209,33 @@ function sendKey(key) {
     if (key != null) {
         stompClient.send("/app/telnet/keydown", {}, JSON.stringify({'deviceId': deviceId, 'userId': useId, 'content': key}));
     }
-
-    $("#cmdtext").focus();
 }
 
 function showCmdResp(message) {
 
     lastResponseTime = new Date().getTime();
 
-    if(message.length == 0) {
+    if (message.length == 0) {
         return;
     }
 
-    if(message.length == 1 && currentKeyDown == message) {
-        $("#cmdtext").val("");
-        return;
+    if (message.indexOf("\b") >= 0) {
+        var text = $("#greetings").text();
+        for (i = 0; i < message.length; i++) {
+            var temp = message[i];
+            if (temp == '\b') {
+                text = text.substring(0, text.length - 1);
+            } else {
+                text += temp;
+            }
+        }
+
+        $("#greetings").text(text);
+    } else {
+        $("#greetings").append(message);
     }
-    var text = message;
-    //  response = response.replaceAll("\\e\\[[\\d;]*[^\\d;]","");  // \e matches escape character
-    // text = text.replace("\\e\\[[\\d;]*[^\\d;]","");
-    text = htmlEncode(text);
-    $("#greetings").append("<li>" + text + "</li>");
-    $('#divList').scrollTop( $('#divList')[0].scrollHeight );
+
+    $("#greetings").scrollTop($("#greetings")[0].scrollHeight);
 }
 
 function showTabResp(message) {
@@ -228,11 +252,7 @@ function showTabResp(message) {
         for (var i = 0; i < lines.length; i++) {
             showCmdResp(lines[i]);
         }
-
-    } else {
-        $("#cmdtext").val(text);
     }
-    $("#cmdtext").focus();
 }
 
 function showKeyDownResp(message) {
@@ -242,12 +262,12 @@ function showKeyDownResp(message) {
     }
 
     if (currentKeyDown == '\t') {
-        var text = $("#cmdtext").val();
-        text += "\t";
-        text += message;
-        $("#cmdtext").val(text);
+        // var text = $("#cmdtext").val();
+        // text += "\t";
+        // text += message;
+        // $("#cmdtext").val(text);
     } else if (currentKeyDown == "Enter") {
-        $("#cmdtext").val("");
+        // $("#cmdtext").val("");
     } else if (currentKeyDown == ' ') {
         if (message.indexOf("\r\n") > 0) {
             var lines = message.split("\r\n");
@@ -300,7 +320,7 @@ function respTimeoutCheck() {
             disconnect();
         }
     } else {
-        if (now - lastResponseTime > 300 * 1000) {
+        if (now - lastResponseTime > 3600 * 1000) {
             disconnect();
         }
     }

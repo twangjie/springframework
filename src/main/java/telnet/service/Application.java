@@ -13,21 +13,22 @@ public class Application {
     @LocalServerPort
     private int port = 12345;
 
+    public static void main(String[] args) {
+
+        SpringApplication.run(Application.class, args);
+    }
+
     /**
      * 修改tomcat默认配置
+     *
      * @return
      */
     @Bean
-    public TomcatEmbeddedServletContainerFactory servletContainer(){
+    public TomcatEmbeddedServletContainerFactory servletContainer() {
         TomcatEmbeddedServletContainerFactory container = new TomcatEmbeddedServletContainerFactory();
         container.setPort(port);
 //      container.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND,""));
         return container;
-    }
-
-    public static void main(String[] args) {
-
-        SpringApplication.run(Application.class, args);
     }
 
 

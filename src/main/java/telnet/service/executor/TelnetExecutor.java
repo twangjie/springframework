@@ -1,18 +1,19 @@
 package telnet.service.executor;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.net.telnet.*;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import telnet.service.TelnetWebSocketHandlerDecoratorFactory;
+import telnet.service.domain.Device;
+import telnet.service.model.TelnetResponse;
+import telnet.service.service.DeviceService;
+
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.nio.charset.Charset;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.net.telnet.*;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import telnet.service.domain.Device;
-import telnet.service.model.TelnetResponse;
-import telnet.service.service.DeviceService;
 
 /**
  * Created by 王杰 on 2017/7/4.
@@ -21,6 +22,7 @@ public class TelnetExecutor {
 
     private static final Log logger = LogFactory.getLog(TelnetExecutor.class);
 
+    private String sessionId;
     private String userId;
     private Device device;
     private TelnetClient telnet = new TelnetClient("ANSI");
@@ -52,7 +54,6 @@ public class TelnetExecutor {
         this.device = device;
     }
 
-
     public void setDeviceService(DeviceService deviceService) {
         this.deviceService = deviceService;
     }
@@ -63,8 +64,8 @@ public class TelnetExecutor {
             telnet.addOptionHandler(new TerminalTypeOptionHandler(
                     "ANSI", false, false, true, false));
 
-            telnet.addOptionHandler(new EchoOptionHandler(true, false, true,
-                    false));
+            telnet.addOptionHandler(new EchoOptionHandler(true, true, true,
+                    true));
             telnet.addOptionHandler(new SuppressGAOptionHandler(true, true,
                     true, true));
 
@@ -90,7 +91,7 @@ public class TelnetExecutor {
             ex.printStackTrace();
             logger.error(ex.getMessage(), ex);
 
-            deviceService.updateStatus(device.getId(), Device.UNKNOWN);
+            deviceService.updateStatus(device.getId(), Device.CONNECTFAILED);
             connected.set(false);
 
             return false;
@@ -131,11 +132,11 @@ public class TelnetExecutor {
             reply = sb.toString();
 
             // https://stackoverflow.com/questions/25189651/how-to-remove-ansi-control-chars-vt100-from-a-java-string
-            if(reply.indexOf("\u001B") >= 0) {
+            if (reply.indexOf("\u001B") >= 0) {
                 reply = reply.replaceAll("\u001B\\[[\\d;]*[^\\d;]", "");
             }
 
-            if(reply.indexOf("\\e") >= 0) {
+            if (reply.indexOf("\\e") >= 0) {
                 reply = reply.replaceAll("\\e\\[[\\d;]*[^\\d;]", "");  // \e matches escape character
             }
 
@@ -156,15 +157,15 @@ public class TelnetExecutor {
     private void write(String value) {
         try {
 
-            if(responseCount.get() == 0) {
-                sendResponse("Server replied nothing...");
-                disconnect();
+            if (responseCount.get() == 0) {
+                forceReleaseSession("Server replied nothing...");
                 return;
             }
 
             if (!telnet.isConnected() || !telnet.isAvailable()) {
-                disconnect();
-                connect();
+                //disconnect();
+                //connect();
+                forceReleaseSession("");
             }
 
             if (value.equals(" \r\n")) {
@@ -180,23 +181,6 @@ public class TelnetExecutor {
         }
     }
 
-    private void write(char value) {
-
-        if(responseCount.get() == 0) {
-            sendResponse("Server replied nothing...");
-            disconnect();
-            return;
-        }
-
-        try {
-            out.write(value);
-            out.flush();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            logger.error(ex.getMessage(), ex);
-            connected.set(false);
-        }
-    }
 
     /**
      * 向目标发送命令字符串
@@ -213,17 +197,6 @@ public class TelnetExecutor {
         return null;
     }
 
-    public String sendCommand(char command) {
-        try {
-            write(command);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            logger.error(ex.getMessage(), ex);
-        }
-        return null;
-    }
-
-
     /**
      * 关闭连接
      */
@@ -232,8 +205,6 @@ public class TelnetExecutor {
             telnet.disconnect();
             if (connected.get()) {
                 deviceService.updateStatus(device.getId(), Device.DISCONNECTED);
-            } else {
-                deviceService.updateStatus(device.getId(), Device.UNKNOWN);
             }
 
             connected.set(false);
@@ -241,6 +212,7 @@ public class TelnetExecutor {
         } catch (Exception ex) {
             ex.printStackTrace();
             logger.error(ex.getMessage(), ex);
+            forceReleaseSession("");
         }
     }
 
@@ -255,7 +227,28 @@ public class TelnetExecutor {
         simpMessageSendingOperations.convertAndSendToUser(userId, "/telnet/cmdresp", telnetResponse);
     }
 
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
+
+    private void forceReleaseSession(String reason) {
+
+        if (reason != null && !reason.isEmpty()) {
+            sendResponse(reason);
+        }
+
+        disconnect();
+        TelnetWebSocketHandlerDecoratorFactory.getInstance().closeSession(sessionId);
+        TelnetExecutorFactory.getInstance().releaseTelnetExecutor(sessionId);
+    }
+
     class ReadResponseThread extends Thread implements TelnetNotificationHandler {
+
+        private long lastReplyTime = System.currentTimeMillis();
 
         public ReadResponseThread() {
 
@@ -293,22 +286,30 @@ public class TelnetExecutor {
                         String reply = sb.toString();
 
                         // https://stackoverflow.com/questions/25189651/how-to-remove-ansi-control-chars-vt100-from-a-java-string
-                        if(reply.indexOf("\u001B") >= 0) {
+                        if (reply.indexOf("\u001B") >= 0) {
                             reply = reply.replaceAll("\u001B\\[[\\d;]*[^\\d;]", "");
                         }
 
-                        if(reply.indexOf("\\e") >= 0) {
+                        if (reply.indexOf("\\e") >= 0) {
                             reply = reply.replaceAll("\\e\\[[\\d;]*[^\\d;]", "");  // \e matches escape character
                         }
 
                         sendResponse(reply);
+
+                        lastReplyTime = System.currentTimeMillis();
                     }
 
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     logger.error("Exception while reading socket: " + ex.getMessage());
 
-                    disconnect();
+                    forceReleaseSession("");
+
+                    break;
+                }
+
+                if (System.currentTimeMillis() - lastReplyTime > 3600 * 1000) {
+                    forceReleaseSession("Session timeout");
                     break;
                 }
 

@@ -14,11 +14,12 @@ public class Device implements Serializable {
     public static final short CONNECTED = 1;
     public static final short DISCONNECTED = 2;
     public static final short UNKNOWN = 3;
+    public static final short CONNECTFAILED = 4;
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(nullable = false)
@@ -39,11 +40,13 @@ public class Device implements Serializable {
     @Column
     private Short status = DISCONNECTED;
 
+    private Long connectFailedCount = new Long(0);
+
     public Device() {
 
     }
 
-    public Device(String ip,String port,String name, String address, String info, Short status) {
+    public Device(String ip, String port, String name, String address, String info, Short status) {
         this.ip = ip;
         this.port = port;
         this.name = name;
@@ -113,4 +116,11 @@ public class Device implements Serializable {
         return getIp() + ":" + getPort();
     }
 
+    public long increaseConnectFailedCount() {
+        return this.connectFailedCount++;
+    }
+
+    public void resetConnectFailedCount() {
+        connectFailedCount = 0L;
+    }
 }

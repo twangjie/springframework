@@ -1,6 +1,11 @@
 package telnet.service.service.impl;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
 import telnet.service.TelnetWebSocketHandlerDecoratorFactory;
 import telnet.service.domain.Device;
 import telnet.service.executor.TelnetExecutor;
@@ -10,17 +15,6 @@ import telnet.service.model.TelnetConnect;
 import telnet.service.model.TelnetResponse;
 import telnet.service.service.DeviceService;
 import telnet.service.service.TelnetService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.MessageHeaders;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
-import org.springframework.util.MimeTypeUtils;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Created by 王杰 on 2017/7/4.
@@ -93,13 +87,8 @@ public class TelnetServiceImpl implements TelnetService {
 
         TelnetExecutor executor = TelnetExecutorFactory.getInstance().getTelnetExecutor(sessionId);
         if (executor != null) {
-//            response.setContent(executor.sendCommand(command.getContent()));
             executor.sendCommand(command.getContent());
         }
-
-//        if (response.getContent().length() > 0) {
-//            simpMessageSendingOperations.convertAndSendToUser(response.getUserId(), "/telnet/cmdresp", response);
-//        }
     }
 
     @Override
