@@ -23,7 +23,7 @@ public class TelnetExecutor {
 
     private String userId;
     private Device device;
-    private TelnetClient telnet = new TelnetClient("VT100");
+    private TelnetClient telnet = new TelnetClient("ANSI");
     private InputStream in;
     private PrintStream out;
 
@@ -61,7 +61,7 @@ public class TelnetExecutor {
         try {
 
             telnet.addOptionHandler(new TerminalTypeOptionHandler(
-                    "VT100", false, false, true, false));
+                    "ANSI", false, false, true, false));
 
             telnet.addOptionHandler(new EchoOptionHandler(true, false, true,
                     false));
@@ -111,7 +111,7 @@ public class TelnetExecutor {
             return "";
         }
 
-        String response = "";
+        String reply = "";
         StringBuilder sb = new StringBuilder();
 
         try {
@@ -128,11 +128,16 @@ public class TelnetExecutor {
                 }
             }
 
-            response = sb.toString();
+            reply = sb.toString();
 
             // https://stackoverflow.com/questions/25189651/how-to-remove-ansi-control-chars-vt100-from-a-java-string
-            // reply = reply.replaceAll("\u001B\\[[\\d;]*[^\\d;]","");
-            response = response.replaceAll("\\e\\[[\\d;]*[^\\d;]","");  // \e matches escape character
+            if(reply.indexOf("\u001B") >= 0) {
+                reply = reply.replaceAll("\u001B\\[[\\d;]*[^\\d;]", "");
+            }
+
+            if(reply.indexOf("\\e") >= 0) {
+                reply = reply.replaceAll("\\e\\[[\\d;]*[^\\d;]", "");  // \e matches escape character
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -140,7 +145,7 @@ public class TelnetExecutor {
             connected.set(false);
         }
 
-        return response;
+        return reply;
     }
 
     /**
@@ -288,8 +293,13 @@ public class TelnetExecutor {
                         String reply = sb.toString();
 
                         // https://stackoverflow.com/questions/25189651/how-to-remove-ansi-control-chars-vt100-from-a-java-string
-                        // reply = reply.replaceAll("\u001B\\[[\\d;]*[^\\d;]","");
-                        reply = reply.replaceAll("\\e\\[[\\d;]*[^\\d;]", "");  // \e matches escape character
+                        if(reply.indexOf("\u001B") >= 0) {
+                            reply = reply.replaceAll("\u001B\\[[\\d;]*[^\\d;]", "");
+                        }
+
+                        if(reply.indexOf("\\e") >= 0) {
+                            reply = reply.replaceAll("\\e\\[[\\d;]*[^\\d;]", "");  // \e matches escape character
+                        }
 
                         sendResponse(reply);
                     }

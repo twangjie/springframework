@@ -20,6 +20,11 @@ public class DeviceServiceImpl implements DeviceService {
 
     public DeviceServiceImpl(DeviceRepository deviceRepository) {
         this.deviceRepository = deviceRepository;
+        List<Device> deviceList =  deviceRepository.findAll();
+        for (Device d : deviceList) {
+            d.setStatus(Device.DISCONNECTED);
+            deviceRepository.save(d);
+        }
     }
 
     @Override

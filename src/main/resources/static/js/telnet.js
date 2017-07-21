@@ -85,7 +85,7 @@ function connect() {
     };
 
     var stompSuccessCallback = function () {
-        setConnected(true);
+        // setConnected(true);
         console.log('IP: ' + $("#ip").val());
         console.log('port: ' + $("#port").val());
         console.log('Connected: ' );
@@ -100,16 +100,19 @@ function connect() {
 
         var uri = '/user/' + useId + '/telnet';
         stompClient.subscribe(uri + '/cmdresp', function (greeting) {
+            setConnected(true);
             var content = JSON.parse(greeting.body).content;
             showCmdResp(content);
         });
 
         stompClient.subscribe(uri + '/tabresp', function (greeting) {
+            setConnected(true);
             var content = JSON.parse(greeting.body).content;
             showTabResp(content);
         });
 
         stompClient.subscribe(uri + '/keydownresp', function (greeting) {
+            setConnected(true);
             var content = JSON.parse(greeting.body).content;
             showKeyDownResp(content);
         });

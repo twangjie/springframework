@@ -76,12 +76,6 @@ public class Device implements Serializable {
         this.port = port;
     }
 
-    @Override
-    public String toString() {
-        return getIp() + ":" + getPort();
-    }
-
-
     public String getName() {
         return name;
     }
@@ -113,4 +107,10 @@ public class Device implements Serializable {
     public void setStatus(Short status) {
         this.status = status;
     }
+
+    @Override
+    public String toString() {
+        return getIp() + ":" + getPort();
+    }
+
 }
