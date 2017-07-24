@@ -174,6 +174,10 @@ public class TelnetExecutor {
                 out.print(value);
             }
             out.flush();
+            if(out.checkError()) {
+                forceReleaseSession("");
+            }
+
         } catch (Exception ex) {
             ex.printStackTrace();
             logger.error(ex.getMessage(), ex);

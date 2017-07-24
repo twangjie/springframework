@@ -117,10 +117,25 @@ public class Device implements Serializable {
     }
 
     public long increaseConnectFailedCount() {
+        if(connectFailedCount == null) {
+            connectFailedCount = new Long(0);
+        }
         return this.connectFailedCount++;
     }
 
     public void resetConnectFailedCount() {
+        if(connectFailedCount == null) {
+            connectFailedCount = new Long(0);
+        }
         connectFailedCount = 0L;
+    }
+
+    public boolean isUnknownStatus() {
+        if(connectFailedCount == null) {
+            connectFailedCount = new Long(0);
+            return false;
+        }
+
+        return this.connectFailedCount > 3;
     }
 }

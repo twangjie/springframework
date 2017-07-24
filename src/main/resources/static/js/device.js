@@ -31,7 +31,9 @@ function getDevices() {
         dataType:'json'
     }).responseText;
 
-    jsonObj.device = JSON.parse(respText);
+    if(respText != null && respText.length > 0) {
+        jsonObj.device = JSON.parse(respText);
+    }
 }
 
 function addDevice() {

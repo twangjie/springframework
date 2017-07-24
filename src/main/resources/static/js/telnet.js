@@ -1,6 +1,7 @@
 var stompClient = null;
 var useId = null;
 var deviceId = 0;
+var sessionTimeOut = 3600;
 var deviceJSONObj = null;
 var retry = 3;
 var connected = false;
@@ -8,7 +9,11 @@ var currentKeyDown = '';
 var lastKeyDown = '';
 
 var connectTime = 0;
+var firstResponseTime = 0;
 var lastResponseTime = 0;
+
+var sessionTimer = null;
+var timeoutAlerted = false;
 
 function onReady() {
     $(window).ready(function () {
@@ -17,7 +22,7 @@ function onReady() {
 
         $.telnetConnect();
 
-        $("body").eq(0).bind("mousedown",function(event){
+        $("body").eq(0).bind("mousedown", function (event) {
             //$('#greetings').focus();
             return false;
         });
@@ -25,35 +30,24 @@ function onReady() {
         $('body').bind('keydown', function (event) {
             currentKeyDown = event.key;
 
-            if(event.key == "F12") {
+            if (event.key == "F5") {
+                return !connected;
+            }
+
+            if (event.keyCode >= 112 && event.keyCode <= 123) {
                 return true;
             }
 
-            if(!connected && event.key == "F5") {
+            if (event.key == "Shift"
+                || event.key == "Alt"
+                || event.key == "Ctrl"
+                || event.key == "CapsLock"
+                || event.key == "Control") {
                 return true;
             }
 
-            if(event.key == "Shift") {
-                return true;
-            }
-
-            if((event.keyCode < 65 || event.keyCode > 90) // A-Z
-                && event.key != " "
-                && event.key != "Tab"
-                && event.key != "Backspace"
-                && event.key != "Enter"
-                && event.key != "?"
-                && event.key != "/"
-                && event.key != "+"
-                && event.key != "="
-                && event.key != "-"
-                && event.key != "/"
-                && event.key != "\\") {
-                return false;
-            }
-
-            if(!connected) {
-                alert("连接已断开");
+            if (!connected) {
+                showAlert("错误", "连接已断开，请重新打开页面.");
                 return true;
             }
 
@@ -68,6 +62,9 @@ function onReady() {
                     sendKey('\r');
                     sendKey('\n');
                     break;
+                case "Spacebar":
+                    sendKey(' ');
+                    break
                 default:
                     sendKey(event.key);
             }
@@ -117,7 +114,6 @@ function connect() {
     };
 
     var stompSuccessCallback = function () {
-        // setConnected(true);
         console.log('IP: ' + $("#ip").val());
         console.log('port: ' + $("#port").val());
         console.log('Connected: ' );
@@ -152,13 +148,15 @@ function connect() {
         telnetConnect();
 
         connectTime = new Date().getTime();
-        setTimeout(respTimeoutCheck, 1000);
+        sessionTimer = setInterval(sessionTimeoutCheck, 1000);
     };
 
     stompClient.connect({}, stompSuccessCallback, stompFailureCallback);
 }
 
 function disconnect() {
+
+    clearInterval(sessionTimer);
 
     telnetDisconnect();
 
@@ -214,6 +212,9 @@ function sendKey(key) {
 function showCmdResp(message) {
 
     lastResponseTime = new Date().getTime();
+    if(firstResponseTime == 0) {
+        firstResponseTime = lastResponseTime;
+    }
 
     if (message.length == 0) {
         return;
@@ -311,22 +312,32 @@ function findDeviceByid(id) {
     return JSON.parse(respText);
 }
 
-function respTimeoutCheck() {
+function sessionTimeoutCheck() {
 
     var now = new Date().getTime();
-
-    if (lastResponseTime == 0) {
+    var remainTime = (sessionTimeOut * 1000 - (now - firstResponseTime)) / 1000;
+    if (firstResponseTime == 0) {
         if (now - connectTime > 10000) {
+            showAlert("错误", "建立连接超时");
             disconnect();
         }
+    } else if (now - firstResponseTime > sessionTimeOut * 1000) {
+        showAlert("超时", "会话已超时，断开连接。");
+        disconnect();
+    } else if ( !timeoutAlerted && remainTime <= 300) {
+        timeoutAlerted = true;
+        showAlert("提示", "实验时间还剩5分钟。");
     } else {
-        if (now - lastResponseTime > 3600 * 1000) {
-            disconnect();
-        }
-    }
+        var hour = parseInt(remainTime / 3600);
+        var min = parseInt((remainTime - hour * 3600) / 60);
+        var sec = parseInt((remainTime - hour * 3600 - min * 60));
 
-    if (this.connected) {
-        setTimeout(respTimeoutCheck, 1000);
+        if(hour > 0) {
+            $("#webConsole-title-remainTime").text("剩余时间：" + hour + "小时" + min + "分钟" + sec + "秒");
+        }else {
+            $("#webConsole-title-remainTime").text("剩余时间：" + min + "分钟" + sec + "秒");
+        }
+
     }
 }
 
@@ -348,6 +359,10 @@ $(function () {
         console.log(window.location.href);
 
         deviceId = $.getUrlParam('devid');
+        var timeout = $.getUrlParam('timeout');
+        if(timeout != null) {
+            sessionTimeOut = timeout * 60;
+        }
 
         deviceJSONObj = findDeviceByid(deviceId);
 
@@ -370,4 +385,16 @@ $(function () {
     }
 });
 
-
+function showAlert(title, text) {
+    $("#dialog-modal").text(text);
+    $("#dialog-modal").dialog({
+        title: title,
+        height: 140,
+        modal: true,
+        buttons: {
+            Ok: function() {
+                $( this ).dialog( "close" );
+            }
+        }
+    });
+}
