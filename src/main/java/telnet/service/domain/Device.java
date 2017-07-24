@@ -120,7 +120,7 @@ public class Device implements Serializable {
         if(connectFailedCount == null) {
             connectFailedCount = new Long(0);
         }
-        return this.connectFailedCount++;
+        return ++this.connectFailedCount;
     }
 
     public void resetConnectFailedCount() {
