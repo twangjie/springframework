@@ -33,17 +33,22 @@ function onReady() {
             if (event.key == "F5") {
                 return !connected;
             }
-
-            if (event.keyCode >= 112 && event.keyCode <= 123) {
-                return true;
+            // F1 - F12
+            else if (event.keyCode >= 112 && event.keyCode <= 123) {
+                return !connected;
             }
-
-            if (event.key == "Shift"
-                || event.key == "Alt"
-                || event.key == "Ctrl"
-                || event.key == "CapsLock"
-                || event.key == "Control") {
-                return true;
+            // 多媒体键
+            else if(event.keyCode >= 170 && event.keyCode <= 180) {
+                return !connected;
+            }
+            else if (event.key == "Shift" || event.key == "Alt" || event.key == "Ctrl"
+                || event.key == "CapsLock" || event.key == "Control" || event.key == "Escape"
+                || event.key == "Insert" || event.key == "Home" || event.key == "End"
+                || event.key == "PageUp" || event.key == "PageDown" || event.key == "NumLock"
+                || event.key == "ScrollLock" || event.key == "Pause" || event.key == "Meta"
+                || event.key == "ContextMenu" || event.key == "Delete" || event.key == "ArrowUp"
+                || event.key == "ArrowDown" || event.key == "ArrowLeft" || event.key == "ArrowRight") {
+                return !connected;
             }
 
             if (!connected) {
