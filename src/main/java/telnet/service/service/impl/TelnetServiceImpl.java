@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import telnet.service.TelnetSettings;
 import telnet.service.TelnetWebSocketHandlerDecoratorFactory;
 import telnet.service.domain.Device;
 import telnet.service.executor.TelnetExecutor;
@@ -30,6 +31,9 @@ public class TelnetServiceImpl implements TelnetService {
     @Autowired
     private DeviceService deviceService;
 
+    @Autowired
+    private TelnetSettings telnetSettings;
+
 //    private ConcurrentLinkedQueue<TelnetResult> telnetResults = new ConcurrentLinkedQueue();
 
     @Override
@@ -45,6 +49,7 @@ public class TelnetServiceImpl implements TelnetService {
         TelnetExecutor executor = TelnetExecutorFactory.getInstance().createTelnetExecutor(sessionId, userId, device);
         executor.setDeviceService(deviceService);
         executor.setSimpMessageSendingOperations(simpMessageSendingOperations);
+        executor.setTermType(telnetSettings.getTermType());
 
 //        String ret = "";
         if (!executor.connect()) {

@@ -22,10 +22,11 @@ public class TelnetExecutor {
 
     private static final Log logger = LogFactory.getLog(TelnetExecutor.class);
 
+    private String termType = "VT100";
     private String sessionId;
     private String userId;
     private Device device;
-    private TelnetClient telnet = new TelnetClient("ANSI");
+    private TelnetClient telnet = null;
     private InputStream in;
     private PrintStream out;
 
@@ -61,13 +62,17 @@ public class TelnetExecutor {
     public boolean connect() {
         try {
 
+            telnet = new TelnetClient(termType);
+
             telnet.addOptionHandler(new TerminalTypeOptionHandler(
-                    "ANSI", false, false, true, false));
+                    termType, true, true, true, true));
 
             telnet.addOptionHandler(new EchoOptionHandler(true, true, true,
                     true));
             telnet.addOptionHandler(new SuppressGAOptionHandler(true, true,
                     true, true));
+
+//            telnet.addOptionHandler(new SimpleOptionHandler(TelnetOption.BINARY, false, false, false, false));
 
             telnet.setCharset(Charset.forName("utf-8"));
             telnet.setDefaultTimeout(300000);
@@ -86,6 +91,27 @@ public class TelnetExecutor {
             readResponseThread.start();
 
             deviceService.updateStatus(device.getId(), Device.CONNECTED);
+
+            if (true) {
+                int waitLoop = 40;
+                while (waitLoop > 0) {
+                    if (responseCount.get() > 0) {
+                        break;
+                    }
+
+                    waitLoop--;
+                    Thread.sleep(50);
+                }
+
+                if (waitLoop <= 0) {
+                    out.print("\r\n");
+                    out.flush();
+                }
+            } else {
+                Thread.sleep(200);
+                out.print("\r\n");
+                out.flush();
+            }
 
         } catch (Exception ex) {
 
@@ -172,13 +198,14 @@ public class TelnetExecutor {
                 forceReleaseSession("");
             }
 
-            if (value.equals(" \r\n")) {
-                out.print(' ');
-            } else {
-                out.print(value);
-            }
+//            if (value.equals(" \r\n")) {
+//                out.print(' ');
+//            } else {
+//                out.print(value);
+//            }
+            out.print(value);
             out.flush();
-            if(out.checkError()) {
+            if (out.checkError()) {
                 forceReleaseSession("");
             }
 
@@ -252,6 +279,10 @@ public class TelnetExecutor {
         disconnect();
         TelnetWebSocketHandlerDecoratorFactory.getInstance().closeSession(sessionId);
         TelnetExecutorFactory.getInstance().releaseTelnetExecutor(sessionId);
+    }
+
+    public void setTermType(String termType) {
+        this.termType = termType;
     }
 
     class ReadResponseThread extends Thread implements TelnetNotificationHandler {
