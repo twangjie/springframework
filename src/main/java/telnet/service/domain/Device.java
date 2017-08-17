@@ -113,25 +113,25 @@ public class Device implements Serializable {
 
     @Override
     public String toString() {
-        return getIp() + ":" + getPort();
+        return "Device:" + getId() + ", " + getIp() + ":" + getPort();
     }
 
     public long increaseConnectFailedCount() {
-        if(connectFailedCount == null) {
+        if (connectFailedCount == null) {
             connectFailedCount = new Long(0);
         }
         return ++this.connectFailedCount;
     }
 
     public void resetConnectFailedCount() {
-        if(connectFailedCount == null) {
+        if (connectFailedCount == null) {
             connectFailedCount = new Long(0);
         }
         connectFailedCount = 0L;
     }
 
     public boolean isUnknownStatus() {
-        if(connectFailedCount == null) {
+        if (connectFailedCount == null) {
             connectFailedCount = new Long(0);
             return false;
         }

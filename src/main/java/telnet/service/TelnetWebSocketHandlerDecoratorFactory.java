@@ -62,6 +62,7 @@ public class TelnetWebSocketHandlerDecoratorFactory implements WebSocketHandlerD
             public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
 
                 String sessionId = session.getId();
+
                 logger.debug(String.format("WebSocket client %s disconnected. sessionId: %s. %s",
                         session.getRemoteAddress().toString(), sessionId, closeStatus.toString()));
 

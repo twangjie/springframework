@@ -80,7 +80,7 @@ public class DeviceServiceImpl implements DeviceService {
     public Long updateStatus(Long id, Short status) {
 
         Device device = findByIdFromDeviceList(id);
-        if (device == null){
+        if (device == null) {
             return 0L;
         }
 

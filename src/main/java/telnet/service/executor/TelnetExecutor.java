@@ -74,12 +74,15 @@ public class TelnetExecutor {
 
 //            telnet.addOptionHandler(new SimpleOptionHandler(TelnetOption.BINARY, false, false, false, false));
 
+            logger.info(String.format("[%s]Connecting %s:%s", device.toString(), device.getIp(), device.getPort()));
+
             telnet.setCharset(Charset.forName("utf-8"));
             telnet.setDefaultTimeout(300000);
             telnet.connect(device.getIp(), Integer.parseInt(device.getPort()));
-            telnet.setKeepAlive(true);
+            telnet.setKeepAlive(false);
             telnet.setTcpNoDelay(true);
 
+            logger.info(String.format("[%s]Connected %s:%s", device.toString(), device.getIp(), device.getPort()));
             connected.set(true);
 
             in = telnet.getInputStream();
@@ -92,25 +95,38 @@ public class TelnetExecutor {
 
             deviceService.updateStatus(device.getId(), Device.CONNECTED);
 
-            if (true) {
-                int waitLoop = 40;
-                while (waitLoop > 0) {
-                    if (responseCount.get() > 0) {
-                        break;
-                    }
+//            if (true) {
+//                int waitLoop = 40;
+//                boolean gotResponse = false;
+//                while (waitLoop > 0) {
+//                    if (responseCount.get() > 0) {
+//                        gotResponse = true;
+//                        logger.info("Received welcome message..");
+//                        break;
+//                    }
+//
+//                    waitLoop--;
+//                    Thread.sleep(50);
+//                }
+//
+//                if (!gotResponse) {
+//                    out.print("\r\n");
+//                    out.flush();
+//                }
+//            } else {
+//                Thread.sleep(200);
+//                out.print("\r\n");
+//                out.flush();
+//            }
 
-                    waitLoop--;
-                    Thread.sleep(50);
-                }
+            Thread.sleep(1000);
 
-                if (waitLoop <= 0) {
-                    out.print("\r\n");
-                    out.flush();
-                }
-            } else {
-                Thread.sleep(200);
+            logger.info(String.format("[%s]Received %d messages before print enter", device.toString(), responseCount.get()));
+
+            if (responseCount.get() == 0) {
                 out.print("\r\n");
                 out.flush();
+                logger.info(String.format("[%s]print enter", device.toString()));
             }
 
         } catch (Exception ex) {
@@ -120,7 +136,7 @@ public class TelnetExecutor {
             ex.printStackTrace();
             logger.error(ex.getMessage(), ex);
 
-            forceReleaseSession("Server replied nothing...");
+            forceReleaseSession(String.format("[%s]Server replied nothing...", device.toString()));
 
             deviceService.updateStatus(device.getId(), Device.CONNECTFAILED);
 
@@ -188,7 +204,7 @@ public class TelnetExecutor {
         try {
 
             if (responseCount.get() == 0) {
-                forceReleaseSession("Server replied nothing...");
+                forceReleaseSession(String.format("[%s]Server replied nothing...", device.toString()));
                 return;
             }
 
@@ -237,6 +253,9 @@ public class TelnetExecutor {
      */
     public void disconnect() {
         try {
+
+            logger.info(String.format("[%s] disconnect", device.toString()));
+
             telnet.disconnect();
             if (connected.get()) {
                 deviceService.updateStatus(device.getId(), Device.DISCONNECTED);
@@ -315,12 +334,12 @@ public class TelnetExecutor {
                         int ret = in.read(buff);
                         if (ret > 0) {
                             sb.append(new String(buff, 0, ret));
-
-                            responseCount.addAndGet(ret);
                         }
                     }
 
                     if (sb.length() > 0) {
+
+                        responseCount.incrementAndGet();
 
                         String reply = sb.toString();
 
@@ -340,7 +359,7 @@ public class TelnetExecutor {
 
                 } catch (Exception ex) {
                     ex.printStackTrace();
-                    logger.error("Exception while reading socket: " + ex.getMessage());
+                    logger.error(String.format("[%s]Exception while reading socket: ", device.toString(), ex.getMessage()));
 
                     forceReleaseSession("");
 
@@ -348,7 +367,7 @@ public class TelnetExecutor {
                 }
 
                 if (System.currentTimeMillis() - lastReplyTime > 3600 * 1000) {
-                    forceReleaseSession("Session timeout");
+                    forceReleaseSession(String.format("[%s]Session timeout", device.toString()));
                     break;
                 }
 

@@ -40,8 +40,7 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
 
         // telnet
-        registry.addEndpoint("/telnet").withSockJS();
-
+        registry.addEndpoint("/telnet").setAllowedOrigins("*").withSockJS();
     }
 
     @Override
