@@ -1,0 +1,11 @@
+[Unit]
+Description=WebTelnet Service  
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/java -Dspring.config.location=/home/www/webtelnet/confg/application.properties -jar /home/www/webtelnet/webtelnet-0.1.0.jar
+WorkingDirectory=/home/www/webtelnet
+SuccessExitStatus=0
+
+[Install]
+WantedBy=multi-user.target
