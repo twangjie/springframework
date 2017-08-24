@@ -72,6 +72,11 @@ angular.module('springPortfolio.controllers', ['ui.bootstrap'])
                     pushNotification(error);
                 })
             .then(function (positions) {
+
+                if(positions == null) {
+                    return;
+                }
+
                 positions.forEach(function(pos) {
                     $scope.positions[pos.ticker] = pos;
                 });
