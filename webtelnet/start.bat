@@ -1,1 +1,1 @@
-java -jar -Dserver.port=12345 webtelnet-0.1.0.jar
+java -Dspring.config.location=confg/application.properties -Dthin.root=lib -jar webtelnet-0.1.0.jar
