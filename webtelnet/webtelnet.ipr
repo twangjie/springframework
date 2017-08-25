@@ -953,26 +953,26 @@
         <root url="jar://$MAVEN_REPOSITORY$/org/webjars/jquery-ui/1.12.1/jquery-ui-1.12.1-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.webjars:jquery:3.2.1">
+    <library name="Maven: org.webjars:jquery:1.12.4">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/jquery/3.2.1/jquery-3.2.1.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/jquery/1.12.4/jquery-1.12.4.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/jquery/3.2.1/jquery-3.2.1-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/jquery/1.12.4/jquery-1.12.4-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/jquery/3.2.1/jquery-3.2.1-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/jquery/1.12.4/jquery-1.12.4-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.webjars:sockjs-client:1.1.2">
+    <library name="Maven: org.webjars:sockjs-client:1.0.2">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/sockjs-client/1.1.2/sockjs-client-1.1.2.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/sockjs-client/1.0.2/sockjs-client-1.0.2.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/sockjs-client/1.1.2/sockjs-client-1.1.2-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/sockjs-client/1.0.2/sockjs-client-1.0.2-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/sockjs-client/1.1.2/sockjs-client-1.1.2-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/sockjs-client/1.0.2/sockjs-client-1.0.2-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.webjars:stomp-websocket:2.3.3-1">

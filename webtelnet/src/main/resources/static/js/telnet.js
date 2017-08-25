@@ -15,6 +15,8 @@ var lastResponseTime = 0;
 var sessionTimer = null;
 var timeoutAlerted = false;
 
+if (!window.console) console = {log: function() {}};
+
 function onReady() {
     $(window).ready(function () {
 

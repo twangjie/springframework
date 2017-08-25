@@ -1,3 +1,6 @@
+
+if (!window.console) console = {log: function() {}};
+
 var flag = false;
 
 var jsonObj = { device: [
