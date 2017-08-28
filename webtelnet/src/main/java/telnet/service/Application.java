@@ -1,6 +1,8 @@
 package telnet.service;
 
 import org.apache.catalina.connector.Connector;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.coyote.http11.Http11NioProtocol;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -12,6 +14,8 @@ import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class Application {
+
+    private static final Log logger = LogFactory.getLog(Application.class);
 
     // application.properties配置中的 local.server.port
     @LocalServerPort
@@ -45,17 +49,22 @@ public class Application {
 
             //设置最大连接数
             http11NioProtocol.setMaxConnections(5000);
+            logger.info("http11NioProtocol.setMaxConnections(5000)");
 
             //设置初始线程数  最小空闲线程数
-            http11NioProtocol.setMinSpareThreads(10);
+            http11NioProtocol.setMinSpareThreads(100);
+            logger.info("http11NioProtocol.setMinSpareThreads(100)");
 
             //设置最大线程数
             http11NioProtocol.setMaxThreads(500);
+            logger.info("http11NioProtocol.setMaxThreads(500)");
 
             //设置超时
             http11NioProtocol.setConnectionTimeout(30000);
+            logger.info("http11NioProtocol.setConnectionTimeout(30000)");
 
             http11NioProtocol.setKeepAliveTimeout(0);
+            logger.info("http11NioProtocol.setKeepAliveTimeout(0)");
         }
     }
 }

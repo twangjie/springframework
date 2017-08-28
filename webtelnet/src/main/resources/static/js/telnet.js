@@ -18,6 +18,7 @@ var timeoutAlerted = false;
 if (!window.console) console = {log: function() {}};
 
 function onReady() {
+
     $(window).ready(function () {
 
         $("#lblStatus").text("连接中");
@@ -66,7 +67,7 @@ function onReady() {
                     sendKey('\b');
                     break;
                 case "Enter":
-                    sendKey('\r');
+                    //sendKey('\r');
                     sendKey('\n');
                     break;
                 case "Spacebar":
@@ -111,6 +112,7 @@ function telnet(devid, name, ip, port) {
 }
 
 function connect() {
+    //var socket = new SockJS('/telnet', "xdr-streaming");
     var socket = new SockJS('/telnet');
 
     stompClient = Stomp.over(socket);
@@ -324,7 +326,7 @@ function sessionTimeoutCheck() {
     var now = new Date().getTime();
     var remainTime = (sessionTimeOut * 1000 - (now - firstResponseTime)) / 1000;
     if (firstResponseTime == 0) {
-        if (now - connectTime > 10000) {
+        if (now - connectTime > 30000) {
             showAlert("错误", "建立连接超时");
             disconnect();
         }

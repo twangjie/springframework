@@ -41,6 +41,11 @@
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-test</artifactId>
             <scope>test</scope>
         </dependency>
@@ -67,7 +72,7 @@
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>sockjs-client</artifactId>
-            <version>1.0.2</version>
+            <version>1.1.2</version>
         </dependency>
         <dependency>
             <groupId>org.webjars</groupId>
@@ -119,6 +124,7 @@
             <artifactId>commons-net</artifactId>
             <version>3.6</version>
         </dependency>
+
 
     </dependencies>
 
