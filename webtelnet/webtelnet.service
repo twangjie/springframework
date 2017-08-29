@@ -3,7 +3,7 @@ Description=WebTelnet Service
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/java -Dspring.config.location=/home/www/webtelnet/confg/application.properties -Dthin.root=/home/www/webtelnet/lib -jar /home/www/webtelnet/webtelnet-0.1.0.jar
+ExecStart=/usr/bin/java -Dspring.config.location=/home/www/webtelnet/confg/application.properties -Dthin.root=/home/www/webtelnet/lib -Djava.net.preferIPv4Stack=true -jar /home/www/webtelnet/webtelnet-0.1.0.jar
 WorkingDirectory=/home/www/webtelnet
 SuccessExitStatus=0
 

@@ -12,6 +12,9 @@ import org.springframework.boot.context.embedded.tomcat.TomcatConnectorCustomize
 import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.Bean;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 @SpringBootApplication
 public class Application {
 
@@ -38,6 +41,21 @@ public class Application {
     public TomcatEmbeddedServletContainerFactory servletContainer() {
         TomcatEmbeddedServletContainerFactory container = new TomcatEmbeddedServletContainerFactory();
         container.setPort(port);
+        try {
+            String ipAddr = telnetSettings.getIpAddr();
+            if(ipAddr != null && !ipAddr.isEmpty() && ipAddr.compareTo("0.0.0.0") != 0) {
+                logger.info("Bind to " + ipAddr);
+                container.setAddress(InetAddress.getByName(ipAddr));
+            } else {
+                logger.info("Bind to 0.0.0.0");
+                ipAddr = "0.0.0.0";
+            }
+
+            container.setAddress(InetAddress.getByName(ipAddr));
+
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
         container.addConnectorCustomizers(new MyTomcatConnectorCustomizer());
 
         return container;
@@ -48,23 +66,23 @@ public class Application {
             Http11NioProtocol http11NioProtocol = (Http11NioProtocol) connector.getProtocolHandler();
 
             //设置最大连接数
-            http11NioProtocol.setMaxConnections(5000);
-            logger.info("http11NioProtocol.setMaxConnections(5000)");
+            http11NioProtocol.setMaxConnections(telnetSettings.getMaxConnections());
+            logger.info("http11NioProtocol.setMaxConnections: " + telnetSettings.getMaxConnections());
 
             //设置初始线程数  最小空闲线程数
-            http11NioProtocol.setMinSpareThreads(100);
-            logger.info("http11NioProtocol.setMinSpareThreads(100)");
+            http11NioProtocol.setMinSpareThreads(telnetSettings.getMinSpareThreads());
+            logger.info("http11NioProtocol.setMinSpareThreads: " + telnetSettings.getMinSpareThreads());
 
             //设置最大线程数
-            http11NioProtocol.setMaxThreads(500);
-            logger.info("http11NioProtocol.setMaxThreads(500)");
+            http11NioProtocol.setMaxThreads(telnetSettings.getMaxThreads());
+            logger.info("http11NioProtocol.setMaxThreads: " + telnetSettings.getMaxThreads());
 
             //设置超时
-            http11NioProtocol.setConnectionTimeout(30000);
-            logger.info("http11NioProtocol.setConnectionTimeout(30000)");
+            http11NioProtocol.setConnectionTimeout(telnetSettings.getConnectionTimeout());
+            logger.info("http11NioProtocol.setConnectionTimeout: " + telnetSettings.getConnectionTimeout());
 
-            http11NioProtocol.setKeepAliveTimeout(0);
-            logger.info("http11NioProtocol.setKeepAliveTimeout(0)");
+            http11NioProtocol.setKeepAliveTimeout(telnetSettings.getKeepAliveTimeout());
+            logger.info("http11NioProtocol.setKeepAliveTimeout: " + telnetSettings.getKeepAliveTimeout());
         }
     }
 }
