@@ -224,7 +224,7 @@ public class TelnetExecutor {
                 forceReleaseSession("");
             }
 
-            if(value.length() == 1 && value.charAt(0) == '\n') {
+            if (value.length() == 1 && value.charAt(0) == '\n') {
                 value = "\r\n";
             }
 

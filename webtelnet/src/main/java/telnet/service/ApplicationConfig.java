@@ -16,7 +16,7 @@ import org.springframework.web.filter.CorsFilter;
 @Configuration
 @ComponentScan
 @EnableJpaRepositories
-@EnableConfigurationProperties({TelnetSettings.class})
+@EnableConfigurationProperties({TelnetSettings.class, TomcatConnectorProperties.class})
 public class ApplicationConfig {
 
     @Bean
