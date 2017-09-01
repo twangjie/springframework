@@ -15,7 +15,10 @@ var lastResponseTime = 0;
 var sessionTimer = null;
 var timeoutAlerted = false;
 
-if (!window.console) console = {log: function() {}};
+if (!window.console) console = {
+    log: function () {
+    }
+};
 
 function onReady() {
 
@@ -41,7 +44,7 @@ function onReady() {
                 return !connected;
             }
             // 多媒体键
-            else if(event.keyCode >= 170 && event.keyCode <= 180) {
+            else if (event.keyCode >= 170 && event.keyCode <= 180) {
                 return !connected;
             }
             else if (event.key == "Shift" || event.key == "Alt" || event.key == "Ctrl"
@@ -100,15 +103,15 @@ function setConnected(connected) {
 }
 
 function S4() {
-    return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+    return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
 }
 
 function guid() {
-    return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+    return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
 }
 
 function telnet(devid, name, ip, port) {
-    window.open("/telnet.html?devid="+devid);
+    window.open("/telnet.html?devid=" + devid);
 }
 
 function connect() {
@@ -125,13 +128,13 @@ function connect() {
     var stompSuccessCallback = function () {
         console.log('IP: ' + $("#ip").val());
         console.log('port: ' + $("#port").val());
-        console.log('Connected: ' );
+        console.log('Connected: ');
         stompClient.subscribe('/topic/telnet', function (greeting) {
             var content = JSON.parse(greeting.body).content;
             showCmdResp(content);
         });
 
-        if(useId == null) {
+        if (useId == null) {
             useId = guid();
         }
 
@@ -179,11 +182,16 @@ function disconnect() {
 function telnetConnect() {
     var telnetHost = $("#ip").val();
     var telnetPort = $("#port").val();
-    stompClient.send("/app/telnet/connect", {}, JSON.stringify({'deviceId': deviceId, 'userId': useId, 'ipaddr': telnetHost, 'port': telnetPort }));
+    stompClient.send("/app/telnet/connect", {}, JSON.stringify({
+        'deviceId': deviceId,
+        'userId': useId,
+        'ipaddr': telnetHost,
+        'port': telnetPort
+    }));
 }
 
 function telnetDisconnect() {
-    stompClient.send("/app/telnet/disconnect", {}, JSON.stringify({'deviceId': deviceId, 'userId': useId }));
+    stompClient.send("/app/telnet/disconnect", {}, JSON.stringify({'deviceId': deviceId, 'userId': useId}));
 }
 
 function sendCommand() {
@@ -192,9 +200,9 @@ function sendCommand() {
     if (cmd == "exit") {
         disconnect();
     } else {
-        if(lastKeyDown == "Tab") {
+        if (lastKeyDown == "Tab") {
             cmd = "\r\n";
-        }else{
+        } else {
             cmd = cmd.trim() + "\r\n";
         }
 
@@ -214,14 +222,18 @@ function sendTab() {
 function sendKey(key) {
 
     if (key != null) {
-        stompClient.send("/app/telnet/keydown", {}, JSON.stringify({'deviceId': deviceId, 'userId': useId, 'content': key}));
+        stompClient.send("/app/telnet/keydown", {}, JSON.stringify({
+            'deviceId': deviceId,
+            'userId': useId,
+            'content': key
+        }));
     }
 }
 
 function showCmdResp(message) {
 
     lastResponseTime = new Date().getTime();
-    if(firstResponseTime == 0) {
+    if (firstResponseTime == 0) {
         firstResponseTime = lastResponseTime;
     }
 
@@ -293,17 +305,18 @@ function showKeyDownResp(message) {
     $('#divList').scrollTop($('#divList')[0].scrollHeight);
 }
 
-function htmlEncode(value){
+function htmlEncode(value) {
 
     value = $('<div/>').text(value).html();
-    value = value.replace(/[ ]/g,"&nbsp;");
+    value = value.replace(/[ ]/g, "&nbsp;");
     value = value.replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;');
     value = value.replace(/\r\n|\n|\r/g, '<br/>');
 
     return value;
 }
+
 //Html解码获取Html实体
-function htmlDecode(value){
+function htmlDecode(value) {
     return $('<div/>').html(value).text();
 }
 
@@ -311,10 +324,10 @@ function findDeviceByid(id) {
     var respText = $.ajax({
         url: "/api/device/" + id,
         async: false,
-        type:'GET',
-        cache:false,
+        type: 'GET',
+        cache: false,
         contentType: "application/json; charset=utf-8",
-        dataType:'text',
+        dataType: 'text',
         data: null
     }).responseText;
 
@@ -333,7 +346,7 @@ function sessionTimeoutCheck() {
     } else if (now - firstResponseTime > sessionTimeOut * 1000) {
         showAlert("超时", "会话已超时，断开连接。");
         disconnect();
-    } else if ( !timeoutAlerted && remainTime <= 300) {
+    } else if (!timeoutAlerted && remainTime <= 300) {
         timeoutAlerted = true;
         showAlert("提示", "实验时间还剩5分钟。");
     } else {
@@ -341,9 +354,9 @@ function sessionTimeoutCheck() {
         var min = parseInt((remainTime - hour * 3600) / 60);
         var sec = parseInt((remainTime - hour * 3600 - min * 60));
 
-        if(hour > 0) {
+        if (hour > 0) {
             $("#webConsole-title-remainTime").text("剩余时间：" + hour + "小时" + min + "分钟" + sec + "秒");
-        }else {
+        } else {
             $("#webConsole-title-remainTime").text("剩余时间：" + min + "分钟" + sec + "秒");
         }
 
@@ -354,14 +367,21 @@ $(function () {
     $("form").on('submit', function (e) {
         e.preventDefault();
     });
-    $( "#connect" ).click(function() { connect(); });
-    $( "#disconnect" ).click(function() { disconnect(); });
-    $( "#send" ).click(function() { sendCommand(); });
+    $("#connect").click(function () {
+        connect();
+    });
+    $("#disconnect").click(function () {
+        disconnect();
+    });
+    $("#send").click(function () {
+        sendCommand();
+    });
 
     $.getUrlParam = function (name) {
         var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
         var r = window.location.search.substr(1).match(reg);
-        if (r != null) return unescape(r[2]); return null;
+        if (r != null) return unescape(r[2]);
+        return null;
     }
 
     $.telnetConnect = function () {
@@ -369,7 +389,7 @@ $(function () {
 
         deviceId = $.getUrlParam('devid');
         var timeout = $.getUrlParam('timeout');
-        if(timeout != null) {
+        if (timeout != null) {
             sessionTimeOut = timeout * 60;
         }
 
@@ -401,8 +421,8 @@ function showAlert(title, text) {
         height: 140,
         modal: true,
         buttons: {
-            Ok: function() {
-                $( this ).dialog( "close" );
+            Ok: function () {
+                $(this).dialog("close");
             }
         }
     });

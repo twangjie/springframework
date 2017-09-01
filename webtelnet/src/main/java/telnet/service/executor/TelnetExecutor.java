@@ -65,10 +65,10 @@ public class TelnetExecutor {
             telnet = new TelnetClient(termType);
 
             telnet.addOptionHandler(new TerminalTypeOptionHandler(
-                    termType, true, true, true, true));
+                    termType, false, false, false, false));
 
             telnet.addOptionHandler(new EchoOptionHandler(true, true, true,
-                    true));
+                    false));
             telnet.addOptionHandler(new SuppressGAOptionHandler(true, true,
                     true, true));
 
@@ -95,37 +95,47 @@ public class TelnetExecutor {
 
             deviceService.updateStatus(device.getId(), Device.CONNECTED);
 
-//            if (true) {
-//                int waitLoop = 40;
-//                boolean gotResponse = false;
-//                while (waitLoop > 0) {
-//                    if (responseCount.get() > 0) {
-//                        gotResponse = true;
-//                        logger.info("Received welcome message..");
-//                        break;
-//                    }
-//
-//                    waitLoop--;
-//                    Thread.sleep(50);
-//                }
-//
-//                if (!gotResponse) {
-//                    out.print("\r\n");
-//                    out.flush();
-//                }
-//            } else {
-//                Thread.sleep(200);
-//                out.print("\r\n");
-//                out.flush();
-//            }
+            if (true) {
+                int waitLoop = 30;
+                boolean gotResponse = false;
+                while (waitLoop > 0) {
+                    if (responseCount.get() > 0) {
+                        gotResponse = true;
+                        logger.info("Received welcome message..");
+                        break;
+                    }
 
-            Thread.sleep(1000);
+                    waitLoop--;
+                    Thread.sleep(100);
+                }
+
+                if (!gotResponse) {
+                    out.print("\r\n");
+                    out.flush();
+                }
+            } else {
+                Thread.sleep(200);
+                out.print("\r\n");
+                out.flush();
+            }
+
+//            Thread.sleep(3000);
 
             logger.info(String.format("[%s]Received %d messages before print enter", device.toString(), responseCount.get()));
 
             if (responseCount.get() == 0) {
                 out.print("\r\n");
                 out.flush();
+
+                out.print("\r\n");
+                out.flush();
+
+                out.print("\r\n");
+                out.flush();
+
+                out.print("\r\n");
+                out.flush();
+
                 logger.info(String.format("[%s]print enter", device.toString()));
             }
 
@@ -214,11 +224,10 @@ public class TelnetExecutor {
                 forceReleaseSession("");
             }
 
-//            if (value.equals(" \r\n")) {
-//                out.print(' ');
-//            } else {
-//                out.print(value);
-//            }
+            if(value.length() == 1 && value.charAt(0) == '\n') {
+                value = "\r\n";
+            }
+
             out.print(value);
             out.flush();
             if (out.checkError()) {

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hello CORS</title>
+    <script src="webjars/jquery/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: "http://192.168.35.3:12345/api/device",
+                method: "GET",
+                contentType: "application/json; charset=utf-8"
+            }).then(function (data, status, jqxhr) {
+                console.log(data)
+            });
+        });
+    </script>
+</head>
+<body>
+</body>
+</html>

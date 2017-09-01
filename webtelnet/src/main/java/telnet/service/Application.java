@@ -43,7 +43,7 @@ public class Application {
         container.setPort(port);
         try {
             String ipAddr = telnetSettings.getIpAddr();
-            if(ipAddr != null && !ipAddr.isEmpty() && ipAddr.compareTo("0.0.0.0") != 0) {
+            if (ipAddr != null && !ipAddr.isEmpty() && ipAddr.compareTo("0.0.0.0") != 0) {
                 logger.info("Bind to " + ipAddr);
                 container.setAddress(InetAddress.getByName(ipAddr));
             } else {

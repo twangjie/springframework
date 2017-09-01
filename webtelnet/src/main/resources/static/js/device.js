@@ -1,23 +1,27 @@
-
-if (!window.console) console = {log: function() {}};
+if (!window.console) console = {
+    log: function () {
+    }
+};
 
 var flag = false;
 
-var jsonObj = { device: [
-    { id:'1', ip: "192.168.35.3", port: "23"},
-    { id:'2', ip: "192.168.35.4", port: "23"},
-    { id:'3', ip: "192.168.35.5", port: "23"}
-]};
+var jsonObj = {
+    device: [
+        {id: '1', ip: "192.168.35.3", port: "23"},
+        {id: '2', ip: "192.168.35.4", port: "23"},
+        {id: '3', ip: "192.168.35.5", port: "23"}
+    ]
+};
 
 function refresh_list() {
     refresh();
     setTimeout(refresh_list, 3000);
 }
 
-$(window).ready(function() {
+$(window).ready(function () {
 
     var path = window.location.pathname;
-    if(path.indexOf("device.html") >= 0) {
+    if (path.indexOf("device.html") >= 0) {
         flag = true;
     }
 
@@ -28,13 +32,13 @@ function getDevices() {
     var respText = $.ajax({
         url: "/api/device",
         async: false,
-        type:'GET',
-        cache:false,
+        type: 'GET',
+        cache: false,
         contentType: "application/json; charset=utf-8",
-        dataType:'json'
+        dataType: 'json'
     }).responseText;
 
-    if(respText != null && respText.length > 0) {
+    if (respText != null && respText.length > 0) {
         jsonObj.device = JSON.parse(respText);
     }
 }
@@ -48,20 +52,20 @@ function addDevice() {
     var info = $('#info').val();
 
     var flag = checkDeviceExist(ip, port);
-    if(flag == false) {
-        alert("添加失败! ip: "+ ip +  ", port: "+ port + " 已经存在!");
+    if (flag == false) {
+        alert("添加失败! ip: " + ip + ", port: " + port + " 已经存在!");
         return false;
     }
 
-    var newDevice = '{"ip": "'+ip+'", "port":"'+port+'", "name":"'+name+'", "address":"'+address+'", "info":"'+info+'", "status":2}';
+    var newDevice = '{"ip": "' + ip + '", "port":"' + port + '", "name":"' + name + '", "address":"' + address + '", "info":"' + info + '", "status":2}';
 
     var respText = $.ajax({
         url: "/api/device",
         async: false,
-        type:'PUT',
-        cache:false,
+        type: 'PUT',
+        cache: false,
         contentType: "application/json; charset=utf-8",
-        dataType:'text',
+        dataType: 'text',
         data: newDevice
     }).responseText;
 
@@ -73,10 +77,10 @@ function deleteDevice(obj) {
     var respText = $.ajax({
         url: "/api/device?id=" + obj.id,
         async: false,
-        type:'DELETE',
-        cache:false,
+        type: 'DELETE',
+        cache: false,
         contentType: "application/json; charset=utf-8",
-        dataType:'text',
+        dataType: 'text',
         data: null
     }).responseText;
 
@@ -84,7 +88,7 @@ function deleteDevice(obj) {
 }
 
 function getStatsDesc(status) {
-    switch(status) {
+    switch (status) {
         case 1:
             return "连接";
             break;
@@ -100,7 +104,7 @@ function refresh() {
 
     var devices = jsonObj.device;
     $("tr[name='device']").remove();
-    for(var i=0; i<devices.length; i++) {
+    for (var i = 0; i < devices.length; i++) {
         var device = devices[i];
 
         var idTd = "<td>" + device.id + "</td>";
@@ -111,7 +115,7 @@ function refresh() {
         var infoTd = "<td>" + device.info + "</td>"
         var statusTd = "<td>" + getStatsDesc(device.status) + "</td>"
 
-        var action = "<td><a href='#' onclick='telnet("+device.id+",\""+device.name+"\",\""+device.ip+"\","+device.port+")'</a>Telnet</td>"
+        var action = "<td><a href='#' onclick='telnet(" + device.id + ",\"" + device.name + "\",\"" + device.ip + "\"," + device.port + ")'</a>Telnet</td>"
         if (flag == true) {
             action = "<td><a href='#' onclick='deleteDevice(this)' id='";
             action += device.id + "'" + "</a>Delete</td>"
@@ -134,8 +138,8 @@ function refresh() {
 
 function checkDeviceExist(ip, port) {
     var devices = jsonObj.device;
-    for(var i=0; i<devices.length; i++) {
-        if(devices[i].ip == ip && devices[i].port == port) {
+    for (var i = 0; i < devices.length; i++) {
+        if (devices[i].ip == ip && devices[i].port == port) {
             return false;
         }
     }
