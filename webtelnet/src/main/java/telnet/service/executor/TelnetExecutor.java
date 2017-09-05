@@ -23,6 +23,8 @@ public class TelnetExecutor {
     private static final Log logger = LogFactory.getLog(TelnetExecutor.class);
 
     private String termType = "VT100";
+    private Integer printCRLFTimes = 5;
+
     private String sessionId;
     private String userId;
     private Device device;
@@ -110,8 +112,10 @@ public class TelnetExecutor {
                 }
 
                 if (!gotResponse) {
-                    out.print("\r\n");
-                    out.flush();
+                    for(int i = 0; i < printCRLFTimes; i++) {
+                        out.print("\r\n");
+                        out.flush();
+                    }
                 }
             } else {
                 Thread.sleep(200);
@@ -119,23 +123,9 @@ public class TelnetExecutor {
                 out.flush();
             }
 
-//            Thread.sleep(3000);
-
             logger.info(String.format("[%s]Received %d messages before print enter", device.toString(), responseCount.get()));
 
             if (responseCount.get() == 0) {
-                out.print("\r\n");
-                out.flush();
-
-                out.print("\r\n");
-                out.flush();
-
-                out.print("\r\n");
-                out.flush();
-
-                out.print("\r\n");
-                out.flush();
-
                 logger.info(String.format("[%s]print enter", device.toString()));
             }
 
@@ -311,6 +301,14 @@ public class TelnetExecutor {
 
     public void setTermType(String termType) {
         this.termType = termType;
+    }
+
+    public Integer getPrintCRLFTimes() {
+        return printCRLFTimes;
+    }
+
+    public void setPrintCRLFTimes(Integer printCRLFTimes) {
+        this.printCRLFTimes = printCRLFTimes;
     }
 
     class ReadResponseThread extends Thread implements TelnetNotificationHandler {

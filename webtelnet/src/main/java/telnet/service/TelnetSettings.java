@@ -8,7 +8,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "webtelnet")
 public class TelnetSettings {
 
-    private String termType;
+    private String termType = "VT100";
+
+    private Integer printCRLFTimes = 5;
 
     public String getTermType() {
         return termType;
@@ -18,5 +20,11 @@ public class TelnetSettings {
         this.termType = termType;
     }
 
+    public Integer getPrintCRLFTimes() {
+        return printCRLFTimes;
+    }
 
+    public void setPrintCRLFTimes(Integer printCRLFTimes) {
+        this.printCRLFTimes = printCRLFTimes;
+    }
 }

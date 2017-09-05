@@ -50,6 +50,7 @@ public class TelnetServiceImpl implements TelnetService {
         executor.setDeviceService(deviceService);
         executor.setSimpMessageSendingOperations(simpMessageSendingOperations);
         executor.setTermType(telnetSettings.getTermType());
+        executor.setPrintCRLFTimes(telnetSettings.getPrintCRLFTimes());
 
 //        String ret = "";
         if (!executor.connect()) {
