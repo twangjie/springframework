@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hello CORS</title>
+
+    <style>
+        pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
+        .string { color: #3ab54a; font-weight: bold; }
+        .number { color: #25aae2; font-weight: bold; }
+        .boolean { color: #f98280; font-weight: bold; }
+        .null { color: #f1592a; font-weight: bold; }
+        .key { color: #92278f; font-weight: bold; }
+    </style>
+
+    <script src="/webjars/jquery/jquery.min.js"></script>
+
+    <script>
+
+        function getUrlParam (name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return unescape(r[2]);
+            return null;
+        }
+
+        function syntaxHighlight(json) {
+            if (typeof json != 'string') {
+                json = JSON.stringify(json, undefined, 2);
+            }
+            json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function(match) {
+                var cls = 'number';
+                if (/^"/.test(match)) {
+                    if (/:$/.test(match)) {
+                        cls = 'key';
+                    } else {
+                        cls = 'string';
+                    }
+                } else if (/true|false/.test(match)) {
+                    cls = 'boolean';
+                } else if (/null/.test(match)) {
+                    cls = 'null';
+                }
+                return '<span class="' + cls + '">' + match + '</span>';
+            });
+        }
+
+        $(document).ready(function () {
+
+            var host = getUrlParam('host');
+            if(host == null) {
+                host = window.location.host;
+            }
+            var devUrl = "http://"+host+"/api/device";
+            $.ajax({
+                url: devUrl,
+                method: "GET",
+                contentType: "application/json; charset=utf-8"
+            }).then(function (data, status, jqxhr) {
+                console.log(data)
+                $('#result').html(syntaxHighlight(data));
+            });
+        });
+    </script>
+</head>
+<body>
+<div>
+<pre id="result">
+
+</pre>
+</div>
+</body>
+</html>

@@ -1,4 +1,4 @@
-package telnet.service;
+package telnet;
 
 import org.apache.catalina.connector.Connector;
 import org.apache.commons.logging.Log;
@@ -10,12 +10,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.embedded.tomcat.TomcatConnectorCustomizer;
 import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 @SpringBootApplication
+@ComponentScan
 public class Application {
 
     private static final Log logger = LogFactory.getLog(Application.class);

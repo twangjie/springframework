@@ -1,13 +1,13 @@
-package telnet.service.executor;
+package telnet.executor;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.net.telnet.*;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import telnet.service.TelnetWebSocketHandlerDecoratorFactory;
-import telnet.service.domain.Device;
-import telnet.service.model.TelnetResponse;
-import telnet.service.service.DeviceService;
+import telnet.TelnetWebSocketHandlerDecoratorFactory;
+import telnet.domain.Device;
+import telnet.model.TelnetResponse;
+import telnet.service.DeviceService;
 
 import java.io.InputStream;
 import java.io.PrintStream;

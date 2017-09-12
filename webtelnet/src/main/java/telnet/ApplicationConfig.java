@@ -1,4 +1,4 @@
-package telnet.service;
+package telnet;
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;

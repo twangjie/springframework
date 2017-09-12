@@ -1,4 +1,4 @@
-package telnet.service.service.impl;
+package telnet.service.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -6,16 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import telnet.service.TelnetSettings;
-import telnet.service.TelnetWebSocketHandlerDecoratorFactory;
-import telnet.service.domain.Device;
-import telnet.service.executor.TelnetExecutor;
-import telnet.service.executor.TelnetExecutorFactory;
-import telnet.service.model.TelnetCommand;
-import telnet.service.model.TelnetConnect;
-import telnet.service.model.TelnetResponse;
-import telnet.service.service.DeviceService;
-import telnet.service.service.TelnetService;
+import telnet.TelnetSettings;
+import telnet.TelnetWebSocketHandlerDecoratorFactory;
+import telnet.domain.Device;
+import telnet.executor.TelnetExecutor;
+import telnet.executor.TelnetExecutorFactory;
+import telnet.model.TelnetCommand;
+import telnet.model.TelnetConnect;
+import telnet.model.TelnetResponse;
+import telnet.service.DeviceService;
+import telnet.service.TelnetService;
 
 /**
  * Created by 王杰 on 2017/7/4.

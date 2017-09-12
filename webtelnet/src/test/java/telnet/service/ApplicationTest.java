@@ -6,8 +6,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import telnet.service.domain.Device;
-import telnet.service.model.DeviceRepository;
+import telnet.domain.Device;
+import telnet.domain.DeviceRepository;
 
 /**
  * Created by 王杰 on 2017/7/6.

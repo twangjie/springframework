@@ -1,4 +1,4 @@
-package telnet.service;
+package telnet;
 
 import org.apache.catalina.connector.Connector;
 import org.springframework.boot.context.properties.ConfigurationProperties;
