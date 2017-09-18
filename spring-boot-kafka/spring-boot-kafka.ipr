@@ -9,8 +9,8 @@
         <module name="spring-boot-kafka" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="1.8">
-      <module name="spring-boot-kafka" target="1.8" />
+    <bytecodeTargetLevel target="1.7">
+      <module name="spring-boot-kafka" target="1.7" />
     </bytecodeTargetLevel>
   </component>
   <component name="Encoding">
@@ -240,6 +240,28 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/net/jpountz/lz4/lz4/1.3.0/lz4-1.3.0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.apache.commons:commons-compress:1.9">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/apache/commons/commons-compress/1.9/commons-compress-1.9.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/apache/commons/commons-compress/1.9/commons-compress-1.9-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/apache/commons/commons-compress/1.9/commons-compress-1.9-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.apache.commons:commons-lang3:3.1">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/apache/commons/commons-lang3/3.1/commons-lang3-3.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/apache/commons/commons-lang3/3.1/commons-lang3-3.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/apache/commons/commons-lang3/3.1/commons-lang3-3.1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.apache.kafka:kafka-clients:0.10.2.0">
@@ -548,6 +570,105 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/org/springframework/spring-websocket/4.3.10.RELEASE/spring-websocket-4.3.10.RELEASE-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.webjars:bootstrap:3.3.7-1">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/bootstrap/3.3.7-1/bootstrap-3.3.7-1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/bootstrap/3.3.7-1/bootstrap-3.3.7-1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/bootstrap/3.3.7-1/bootstrap-3.3.7-1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.webjars:jquery-ui-themes:1.12.1">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/jquery-ui-themes/1.12.1/jquery-ui-themes-1.12.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/jquery-ui-themes/1.12.1/jquery-ui-themes-1.12.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/jquery-ui-themes/1.12.1/jquery-ui-themes-1.12.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.webjars:jquery-ui:1.12.1">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/jquery-ui/1.12.1/jquery-ui-1.12.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/jquery-ui/1.12.1/jquery-ui-1.12.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/jquery-ui/1.12.1/jquery-ui-1.12.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.webjars:jquery:1.12.4">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/jquery/1.12.4/jquery-1.12.4.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/jquery/1.12.4/jquery-1.12.4-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/jquery/1.12.4/jquery-1.12.4-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.webjars:json3:3.3.2-1">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/json3/3.3.2-1/json3-3.3.2-1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/json3/3.3.2-1/json3-3.3.2-1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/json3/3.3.2-1/json3-3.3.2-1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.webjars:sockjs-client:1.0.2">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/sockjs-client/1.0.2/sockjs-client-1.0.2.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/sockjs-client/1.0.2/sockjs-client-1.0.2-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/sockjs-client/1.0.2/sockjs-client-1.0.2-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.webjars:stomp-websocket:2.3.3-1">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/stomp-websocket/2.3.3-1/stomp-websocket-2.3.3-1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/stomp-websocket/2.3.3-1/stomp-websocket-2.3.3-1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/stomp-websocket/2.3.3-1/stomp-websocket-2.3.3-1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.webjars:webjars-locator-core:0.32">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/webjars-locator-core/0.32/webjars-locator-core-0.32.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/webjars-locator-core/0.32/webjars-locator-core-0.32-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/webjars-locator-core/0.32/webjars-locator-core-0.32-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.webjars:webjars-locator:0.32-1">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/webjars-locator/0.32-1/webjars-locator-0.32-1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/webjars-locator/0.32-1/webjars-locator-0.32-1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/webjars-locator/0.32-1/webjars-locator-0.32-1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.xerial.snappy:snappy-java:1.1.2.6">

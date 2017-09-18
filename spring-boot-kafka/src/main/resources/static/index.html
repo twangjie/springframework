@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <title>Spring boot Kafka Test</title>
+    <link href="webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
+
+    <script src="webjars/json3/json3.min.js"></script>
+    <script src="webjars/jquery/jquery.min.js"></script>
+    <script src="webjars/jquery-ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="webjars/stomp-websocket/stomp.min.js"></script>
+    <script src="webjars/sockjs-client/sockjs.min.js"></script>
+    <script>
+        var stompClient = null;
+
+        if (!window.console) console = {
+            log: function () {
+            }
+        };
+
+        function setConnected(connected) {
+            $("#connect").prop("disabled", connected);
+            $("#disconnect").prop("disabled", !connected);
+            $("#subscribe").prop("disabled", !connected);
+
+            if (connected) {
+                $("#conversation").show();
+            }
+            else {
+                $("#conversation").hide();
+            }
+            $("#greetings").html("");
+        }
+
+        function connect() {
+
+            // 通过指定url创建WebSocket
+            var wsUrl = "http://" + window.location.host + '/v2/rest/monctrl/alarms-ws';
+
+            //var socket = new SockJS(wsUrl,'jsonp-polling', { debug: true });
+            var socket = new SockJS(wsUrl);
+
+            // 在WebSocket基础上创建 Stomp 对象，用于实现发布订阅功能
+            stompClient = Stomp.over(socket);
+
+            //  建立连接失败回调
+            var stompFailureCallback = function (error) {
+                disconnect();
+                console.log('STOMP: ' + error);
+            };
+
+            //  建立连接成功回调
+            var stompSuccessCallback = function () {
+                setConnected(true);
+                console.log('Connected: ');
+            };
+
+            // 连接服务器
+            stompClient.connect({}, stompSuccessCallback, stompFailureCallback);
+        }
+
+        function disconnect() {
+            if (stompClient != null) {
+                stompClient.disconnect();
+            }
+            setConnected(false);
+            console.log("Disconnected");
+        }
+
+        function subscribe() {
+
+            // 通过指定接口想服务器发送自定义格式的json数据
+            var userId = $("#userId").val();
+
+            if (userId == null || userId == "") {
+
+                // 订阅所有报警
+                stompClient.subscribe('/topic/tip/v2/monctrl/alarms', function (data) {
+                    // 在次订阅接口的回调中处理服务端推送的数据
+                    var content = JSON.parse(data.body);
+                    showGreeting(data.body);
+                });
+            }
+            else {
+                // 订阅指定用户的报警
+                stompClient.subscribe('/user/' + userId + '/tip/v2/monctrl/alarms', function (data) {
+                    // 在次订阅接口的回调中处理服务端推送的数据
+                    var content = JSON.parse(data.body);
+                    showGreeting(data.body);
+                });
+            }
+
+            $("#subscribe").prop("disabled", true);
+        }
+
+        function showGreeting(message) {
+            $("#greetings").append("<tr><td>" + message + "</td></tr>");
+        }
+
+        $(function () {
+            $("form").on('submit', function (e) {
+                e.preventDefault();
+            });
+            $("#connect").click(function () {
+                connect();
+            });
+            $("#disconnect").click(function () {
+                disconnect();
+            });
+            $("#subscribe").click(function () {
+                subscribe();
+            });
+        });
+
+        $(window).ready(function () {
+            $("#subscribe").prop("disabled", true);
+        });
+    </script>
+</head>
+<body>
+<noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
+    enabled. Please enable
+    Javascript and reload this page!</h2></noscript>
+<div id="main-content" class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="connect">WebSocket connection:</label>
+                    <button id="connect" class="btn btn-default" type="submit">Connect</button>
+                    <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="userId">指定用户:</label>
+                    <input type="text" id="userId" class="form-control" placeholder="用户ID...">
+                </div>
+                <button id="subscribe" class="btn btn-default" type="submit">订阅</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table id="conversation" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>报警推送</th>
+                </tr>
+                </thead>
+                <tbody id="greetings">
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </form>
+</div>
+</body>
+</html>
