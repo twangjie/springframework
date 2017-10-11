@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta content="text/html; charset=UTF-8" http-equiv="content-type">
-    <title>Hello WebSocket with STOMP over SockJS</title>
+    <title>Echo WebSocket with STOMP over SockJS</title>
     <link href="/css/main.css" rel="stylesheet">
     <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
@@ -32,8 +32,9 @@
         function connect() {
 
             // 通过指定url创建WebSocket
-            //var socket = new SockJS('/test/ws-echo-endpoint','jsonp-polling', { debug: true });
-            var socket = new SockJS('/test/ws-echo-endpoint');
+            var wsUrl = "http://" + window.location.host + '/test/ws-echo-endpoint';
+            //var socket = new SockJS(wsUrl,'jsonp-polling', { debug: true });
+            var socket = new SockJS(wsUrl);
 
             // 在WebSocket基础上创建 Stomp 对象，用于实现发布订阅功能
             stompClient = Stomp.over(socket);

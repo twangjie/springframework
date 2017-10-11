@@ -11,14 +11,12 @@ import telnet.TelnetWebSocketHandlerDecoratorFactory;
 
 import java.util.List;
 
-// http://blog.csdn.net/haoyuyang/article/details/53364372
-
 @Configuration
 @EnableWebSocket
 @EnableWebSocketMessageBroker
 public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer implements WebSocketConfigurer {
 
-    private String sockJsClientLibraryUrl = "/webjars/sockjs-client/sockjs.js";
+    private String sockJsClientLibraryUrl = "webjars/sockjs-client/sockjs.min.js";
 
     @Bean
     public ServletServerContainerFactoryBean createWebSocketContainer() {

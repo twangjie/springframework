@@ -85,17 +85,6 @@
     <property name="settings.editor.selected.configurable" value="vcs.Subversion" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
   </component>
-  <component name="PublishConfigData">
-    <serverData>
-      <paths name="192.168.35.240">
-        <serverdata>
-          <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
-          </mappings>
-        </serverdata>
-      </paths>
-    </serverData>
-  </component>
   <component name="SvnConfiguration">
     <configuration>C:\Users\Administrator\AppData\Roaming\Subversion</configuration>
   </component>
@@ -964,15 +953,15 @@
         <root url="jar://$MAVEN_REPOSITORY$/org/webjars/jquery-ui/1.12.1/jquery-ui-1.12.1-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: org.webjars:jquery:1.12.4">
+    <library name="Maven: org.webjars:jquery:1.12.1">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/jquery/1.12.4/jquery-1.12.4.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/jquery/1.12.1/jquery-1.12.1.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/jquery/1.12.4/jquery-1.12.4-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/jquery/1.12.1/jquery-1.12.1-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/jquery/1.12.4/jquery-1.12.4-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/org/webjars/jquery/1.12.1/jquery-1.12.1-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.webjars:sockjs-client:1.0.2">

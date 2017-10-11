@@ -5,7 +5,7 @@
 
     <groupId>org.webtelnet</groupId>
     <artifactId>webtelnet</artifactId>
-    <version>0.1.0</version>
+    <version>1.0.2</version>
 
     <properties>
         <java.version>1.7</java.version>
@@ -96,7 +96,7 @@
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>jquery</artifactId>
-            <version>1.12.4</version>
+            <version>1.12.1</version>
         </dependency>
         <dependency>
             <groupId>org.webjars</groupId>
