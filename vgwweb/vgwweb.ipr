@@ -254,6 +254,9 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$/.." vcs="Git" />
+  </component>
   <component name="libraryTable">
     <library name="Maven: antlr:antlr:2.7.7">
       <CLASSES>
